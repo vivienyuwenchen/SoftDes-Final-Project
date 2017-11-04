@@ -1,0 +1,49 @@
+Stage #3081873464: Holdem (1 on 1)  No Limit $10 - 2009-07-19 07:53:47 (ET)
+Table: GERONIMO DR (Real Money) Seat #4 is the dealer
+Seat 4 - MbolvtuGox16PTpaKdA2Qw ($2,024.25 in chips)
+Seat 6 - ImGJB2dbhKlUmTGgfcw/+w ($2,423.25 in chips)
+MbolvtuGox16PTpaKdA2Qw - Posts small blind $5
+ImGJB2dbhKlUmTGgfcw/+w - Posts big blind $10
+*** POCKET CARDS ***
+MbolvtuGox16PTpaKdA2Qw - Folds
+*** SHOW DOWN ***
+ImGJB2dbhKlUmTGgfcw/+w - Does not show
+ImGJB2dbhKlUmTGgfcw/+w Collects $15 from main pot
+*** SUMMARY ***
+Total Pot($15)
+Seat 4: MbolvtuGox16PTpaKdA2Qw (dealer) (small blind) Folded on the POCKET CARDS
+Seat 6: ImGJB2dbhKlUmTGgfcw/+w (big blind) collected Total ($15)
+
+
+
+Stage #3081870172: Holdem (1 on 1)  No Limit $10 - 2009-07-19 07:53:51 (ET)
+Table: LONGBOW DR (Real Money) Seat #6 is the dealer
+Seat 6 - cz772Z5WDHCPg0e5oSq2+A ($1,907.34 in chips)
+Seat 4 - VGwH+noMNe+3RQBlmsCi/w ($577.46 in chips)
+cz772Z5WDHCPg0e5oSq2+A - Posts small blind $5
+VGwH+noMNe+3RQBlmsCi/w - Posts big blind $10
+*** POCKET CARDS ***
+cz772Z5WDHCPg0e5oSq2+A - Raises $25 to $30
+VGwH+noMNe+3RQBlmsCi/w - Calls $20
+*** FLOP *** [Ks Ad 2h]
+VGwH+noMNe+3RQBlmsCi/w - Bets $30
+cz772Z5WDHCPg0e5oSq2+A - Calls $30
+*** TURN *** [Ks Ad 2h] [9c]
+VGwH+noMNe+3RQBlmsCi/w - Checks
+cz772Z5WDHCPg0e5oSq2+A - Checks
+*** RIVER *** [Ks Ad 2h 9c] [Kc]
+VGwH+noMNe+3RQBlmsCi/w - Checks
+cz772Z5WDHCPg0e5oSq2+A - Bets $90
+VGwH+noMNe+3RQBlmsCi/w - Folds
+cz772Z5WDHCPg0e5oSq2+A - returned ($90) : not called
+*** SHOW DOWN ***
+cz772Z5WDHCPg0e5oSq2+A - Does not show
+cz772Z5WDHCPg0e5oSq2+A Collects $119.25 from main pot
+*** SUMMARY ***
+Total Pot($120) | Rake ($0.75)
+Board [Ks Ad 2h 9c Kc]
+Seat 4: VGwH+noMNe+3RQBlmsCi/w (big blind) Folded on the RIVER
+Seat 6: cz772Z5WDHCPg0e5oSq2+A (dealer) (small blind) collected Total ($119.25) HI:($119.25)  [Does not show]
+
+
+fake
