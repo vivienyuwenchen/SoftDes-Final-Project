@@ -46,4 +46,32 @@ Seat 4: VGwH+noMNe+3RQBlmsCi/w (big blind) Folded on the RIVER
 Seat 6: cz772Z5WDHCPg0e5oSq2+A (dealer) (small blind) collected Total ($119.25) HI:($119.25)  [Does not show]
 
 
-fake
+Stage #3084842394: Holdem (1 on 1)  No Limit $10 - 2009-07-20 00:38:19 (ET)
+Table: PEORIA (Real Money) Seat #4 is the dealer
+Seat 4 - uTAZ8SSSb+9UY4iT33HAPg ($6,251 in chips)
+Seat 6 - h7udftelvNrhQoX+LQLLSQ ($2,271.25 in chips)
+uTAZ8SSSb+9UY4iT33HAPg - Posts small blind $5
+h7udftelvNrhQoX+LQLLSQ - Posts big blind $10
+*** POCKET CARDS ***
+uTAZ8SSSb+9UY4iT33HAPg - Raises $15 to $20
+h7udftelvNrhQoX+LQLLSQ - Calls $10
+*** FLOP *** [3d 6d 6c]
+h7udftelvNrhQoX+LQLLSQ - Checks
+uTAZ8SSSb+9UY4iT33HAPg - Bets $30
+h7udftelvNrhQoX+LQLLSQ - Calls $30
+*** TURN *** [3d 6d 6c] [7s]
+h7udftelvNrhQoX+LQLLSQ - Checks
+uTAZ8SSSb+9UY4iT33HAPg - Bets $85
+h7udftelvNrhQoX+LQLLSQ - Folds
+uTAZ8SSSb+9UY4iT33HAPg - returned ($85) : not called
+*** SHOW DOWN ***
+uTAZ8SSSb+9UY4iT33HAPg - Does not show
+uTAZ8SSSb+9UY4iT33HAPg Collects $99.25 from main pot
+*** SUMMARY ***
+Total Pot($100) | Rake ($0.75)
+Board [3d 6d 6c 7s]
+Seat 4: uTAZ8SSSb+9UY4iT33HAPg (dealer) (small blind) collected Total ($99.25) HI:($99.25)  [Does not show]
+Seat 6: h7udftelvNrhQoX+LQLLSQ (big blind) Folded on the TURN
+
+
+-
