@@ -8,45 +8,29 @@ def read_hand(hand):
     cards_on_table = []
     round_types = []
     actions = []
-    stage_nums = []
-    game_types = []
-    dates = []
-    tables = []
-    dealers = []
-    play1_data = []
-    play2_data = []
     pocket_status1 = []
     pocket_status2 = []
     for l in all_lines:
         if "Stage" in l:
             stage_num = l[l.find("#")+1 : l.find(":")]
-            stage_nums.append(stage_num)
             game_type = l[l.find(":")+2 : l.find("-")]
-            game_types.append(game_type)
             date = l[l.find("-")+2:]
-            dates.append(date)
         elif "Table" in l:
             table = l[l.find(":")+1 : l.find("(Real Money)")]
-            tables.append(table)
             dealer_seatnum = l[l.find("#")+1 : l.find(" is")]
-            dealers.append(dealer_seatnum)
         elif "in chips" in l:
             if seat_count == 0:
                 player1_seatnum = l[l.find(" ")+1: l.find("-")-1]
                 player1_id = l[l.find("-")+2 : l.find("(")-1]
                 player1_chips = l[l.find("$"): l.find("in")-1]
-                data_1 = (player1_seatnum, player1_id, player1_chips)
-                play1_data.append(data_1)
                 #print("Defined Player 1 ID: ", player1_id)
             elif seat_count == 1:
                 player2_seatnum = l[l.find(" ")+1: l.find("-")-1]
                 player2_id = l[l.find("-")+2 : l.find("(")-1]
                 player2_chips = l[l.find("$"): l.find("in")-1]
-                data_2 = (player2_id, player2_chips)
-                play2_data.append(data_2)
                 #print("Defined Player 2 ID: ", player2_id)
             else:
-                print("Hand has more than two players")
+                #print("Hand has more than two players")
                 return
             seat_count += 1
         elif "Posts" in l:
@@ -76,13 +60,13 @@ def read_hand(hand):
             cards_on_table.append(card)
         elif "** SHOW DOWN **" in l:
             round_type = "show down"
-            round_types.append(round_type)
+            #round_types.append(round_type)
         elif "** SUMMARY **" in l:
             round_type = "summary"
-            round_types.append(round_type)
-            print("--------")
-            print("Summary")
-            print("--------")
+            #round_types.append(round_type)
+            #print("--------")
+            #print("Summary")
+            #print("--------")
         elif not round_type == "summary" and not round_type == "":              # parse through actions in each round (undefined length)
             #round.round_type = round_type
             if player1_id in l:
@@ -145,37 +129,35 @@ def read_hand(hand):
             else:
                 print("Something went wrong. No players found in round")
         elif round_type == "summary" and not l == "":
-            print(l)
+            #print(l)
+            pass
         else:
-            print("**", l)
+            #print("**", l)
+            pass
 
-    print("Table: ", cards_on_table)
-
-    ##create instances
-    for d in range(len(play1_data)):
-        player1_seatnum, player1_id, player1_chips = play1_data[d]
-        dealer_seatnum = dealers[d]
-        if player1_seatnum == dealer_seatnum:
-            dealer = player1_id
-            player1_dealer = True
-            player2_dealer = False
-        else:
-            dealer = player2_id
-            player1_dealer = False
-            player2_dealer = True
-
-        Player1 = Player(player1_id, player1_chips, player1_dealer, pocket_status1, player1_blind_amo)
-        Player2 = Player(player2_id, player2_chips, player2_dealer, pocket_status2, player2_blind_amo)
-    players = [Player1, Player2]
+    #print("Table: ", cards_on_table)
 
     rounds = []
-    for i in range(len(rounds)):
+    ##create instances
+    if player1_seatnum == dealer_seatnum:
+        dealer = player1_id
+        player1_dealer = True
+        player2_dealer = False
+    else:
+        dealer = player2_id
+        player1_dealer = False
+        player2_dealer = True
+
+    Player1 = Player(player1_id, player1_chips, player1_dealer, pocket_status1, player1_blind_amo)
+    Player2 = Player(player2_id, player2_chips, player2_dealer, pocket_status2, player2_blind_amo)
+    players = [Player1, Player2]
+
+    for i in range(len(round_types)):
         rounds.append(Round(round_types[i], players, actions[i]))
 
-    #for matching tables?
-    #hand = Hand(dealer_seatnum, stage_num, Player1.bet+Player2.bet, table_cards, rounds)
-    #hands = all_hands
-    #game = Game(game_type, table, date, players, hands)
+    return rounds
+    #hand = Hand(rounds, dealer_seatnum, stage_num, pot, table_cards, summary)
+    #return hand
 
 
 def per_hand(file_name):
@@ -187,7 +169,7 @@ def per_hand(file_name):
         for line in f: # Store each line in a string variable "line"
             if line == "\n" and prevline == "\n" and not len(hand) == 0:
                 all_hands.append(hand)
-                #rint(hand)
+                #print(hand)
                 hand = ""
             else:
                 hand = hand + line
@@ -195,7 +177,13 @@ def per_hand(file_name):
 
         return all_hands
 
+def find_games():
+    """Takes input of all hands played, classifies them into games
+    """
+
 if __name__ == "__main__":
-    all_hands = per_hand('small-text.txt')
-    for h in all_hands:
-        read_hand(h)
+    all_hands_text = per_hand('small-text.txt')
+    all_hands = read_hand(all_hands_text[1])
+    #for h in all_hands:
+        #read_hand(h)
+    print(all_hands)

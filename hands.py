@@ -13,7 +13,8 @@ class Hand:
     """
     Contains the information for a full hand of poker
     """
-    def __init__(self, dealer, stage_num, pot, table_cards, summary):
+    def __init__(self, rounds, dealer, stage_num, pot, table_cards, summary):
+        self.rounds = rounds
         self.dealer = dealer
         self.stage_num = stage_num
         #self.blinds = blinds
