@@ -77,11 +77,11 @@ class Pot():
 	def __init__(self, money):
 		self.value = money
 
-	def money_to_pot(self,money,other):
+	def money_to_pot(self,money,donorpot):
 		"""moves money from the self pot into anouther
 		pot"""
 		self.value += money
-		other.value -= money
+		donorpot.value -= money
 	def __repr__(self):
 		return self.value
 class Player():
@@ -90,9 +90,15 @@ class Player():
 		self.pot = Pot(money)
 		self.isturn = False
 		self.folded = False
+		self.bigblind = False
+		self.smallblind = False
+		self.contribution = 0
 	def player_turn(self):
 		""" is used to make it the player's turn"""
 		self.isturn = True
+
+	def player_showContribution(self):
+		return(self.contribution)
 
 	def player_check(self):
 		self.isturn = False
@@ -100,15 +106,28 @@ class Player():
 	def player_fold(self):
 		self.folded = True
 		pass
+	def player_contribute(self,money):
+		"""
+		store how much money the player added
+		Pot add that money to the players pot contibution
+		>>> player1 = Player(1000)
+		>>> 
+		>>> player1.player_contribute(100)
 
-	def player_bet (self, raise_money,other):
+		>>> print (player1.contribution)
+		100
+		"""
+		self.contribution += money
+		
+
+	def player_bet (self, raise_money,otherpot):
 		"""Takes the bet ammount and puts it in the pot
-		>>>yourpot = Pot(10000)
-		>>>player1 = Player(100000)
-		>>>player1.player_bet(5000, yourpot)
-		>>>print(yourpot.__repr__())
+		>>> yourpot = Pot(10000)
+		>>> player1 = Player(100000)
+		>>> player1.player_bet(5000, yourpot)
+		>>> print(yourpot.__repr__())
 		15000"""
-		other.money_to_pot(raise_money, self.pot)
+		otherpot.money_to_pot(raise_money, self.pot)
 		self.isturn = False
 		pass
 
@@ -123,7 +142,105 @@ class Game():
 		self.table = []
 		self.deck = Deck()
 		self.deck.createDeck()
-	
+		self.tablepot = 0
+		self.player1_contribution = 0
+		self.player2_contribution = 0
+		self.smallblind_ammount = 50
+		self.bigblind_ammount = 100
+		self.player1 = Player(money1)
+		self.player2 = Player(money2)
+
+	def add_deck():
+		"""Adds another deck if the first one runs low"""
+		pass
+	def pocket():
+		"""deals each player 2 cards"""
+		self.deck(dealCards(player1))
+		self.deck(dealCards(player2))
+		self.deck(dealCards(player1))
+		self.deck(dealCards(player2))
+		blinds(player1,player2)
+		playeer_move(player1,player2)
+
+
+
+
+		pass
+	def flop():
+
+		"""puts three cards on the table"""
+		pass
+	def turn():
+		"""puts one card on the table"""
+		pass
+	def river():
+		"""puts last card on the table"""
+		pass
+	def counts_player_contrib(player, money, the_pot):
+		""" when ever a player adds money to the table
+		Pot add that money to the players pot contibution
+		#>>> player1 = Player(1000)
+
+		#>>> pot = Pot(100)
+
+		#>>> Game.counts_player_contrib(player1, 100, pot)
+		#100
+		
+		"""
+
+		player.player_bet(money,the_pot)
+		player.player_contribute(money)
+		(player.player_showContribution())
+
+	def blinds(player1, player2):
+		"""chooses blinds for players"""
+		if  player2.bigblind == False:
+			player1.smallblind = True
+			player2.bigblind = False
+			player1.player_bet(smallblind_ammount,self.tablepot)
+			player2.player_bet(bigblind_ammount,self.tablepot)
+
+		if  player2.bigblind == True:
+			player1.smallblind = True
+			player2.bigblind = False
+			player2.player_bet(smallblind_ammount,self.tablepot)
+			player1.player_bet(bigblind_ammount,self.tablepot)
+
+		
+		
+		pass
+	def betting():
+		"""players bet against each other"""
+	def dealCards(deck, player1):
+		"""
+		pops cards of a deck and gives is to a player
+
+		"""
+		player1.addcard(deck.deal())
+
+	def player_move(player, other):
+		""" gets the move from the player"""
+		move = raw_input("Check, Raise, or Fold?>>>")
+		if move == "Fold":
+			player.player_fold()   #player folds
+		if move == "Check":
+			#player maches the cotrobution of the other player
+			if player.contribution < other.contribution: 
+				money = other.contribution - player.contribution
+				player.player_bet(money, self.tablepot)
+			
+		if move == "Raise": #player bets and abount
+			money = 100
+			player.player_bet(money, self.tablepot)
+			other.player_move(player)
+
+			#do nothing
+
+			
+
+
+
+
 
 
 
@@ -135,39 +252,36 @@ class Game():
 
 
 
-
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
+   # doctest.run_docstring_examples(Game.counts_player_contrib, globals(),verbose=True)
 	
 
 
-Suits = [" of clubs", " of Diamonds", " of Spades", " of Hearts"]
-Values = [1,2,3,4,5,6,7,8,9,10,11,12,13]
-mydeck = Deck()
-for s in Suits:
-	for v in Values:
-		mydeck.add(s,v)
-Ace = Card("of Spades", 13)
+
 #print(Ace.__repr__())
 #mydeck.showcards()
-myhand = Hand()
+#myhand = Hand()
 #for i in range(5):
 	#myhand.add(mydeck.deal())
-myhand.add(Card(" of Spades", 13))
-myhand.add(Card(" of Diamonds", 13))
-myhand.add(Card("of Spades", 12))
-myhand.add(Card(" of Hearts", 12))
-myhand.add(Card(" of clubs", 13))
-myhand.showcards()
-myhand.order()
-myhand.has_twos()
-mypot = Pot(10000)
-yourpot = Pot(10000)
-yourpot.money_to_pot(10000, mypot)
-print(mypot.__repr__())
-print(yourpot.__repr__())
-yourpot = Pot(10000)
-player1 = Player(100000)
-player1.player_bet(5000, yourpot)
-print(yourpot.__repr__())
-player2 = Player(100000)
-poker = Game(player1,player2,11,22)
-poker.deck.showcards()
+#myhand.add(Card(" of Spades", 13))
+#myhand.add(Card(" of Diamonds", 13))
+#myhand.add(Card("of Spades", 12))
+#myhand.add(Card(" of Hearts", 12))
+#myhand.add(Card(" of clubs", 13))
+#myhand.showcards()
+#myhand.order()
+#myhand.has_twos()
+#mypot = Pot(10000)
+#yourpot = Pot(10000)
+#yourpot.money_to_pot(10000, mypot)
+#print(mypot.__repr__())
+#print(yourpot.__repr__())
+#yourpot = Pot(10000)
+#player1 = Player(100000)
+#player1.player_bet(5000, yourpot)
+##print(yourpot.__repr__())
+#player2 = Player(100000)
+#poker = Game(player1,player2,11,22)
+#poker.deck.showcards()
