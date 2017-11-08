@@ -10,6 +10,7 @@ def read_hand(hand):
     actions = []
     pocket_status1 = []
     pocket_status2 = []
+    pot = 0
     for l in all_lines:
         if "Stage" in l:
             stage_num = l[l.find("#")+1 : l.find(":")]
@@ -37,9 +38,11 @@ def read_hand(hand):
             if player1_id in l:
                 player1_blind_type = l[l.find("Posts")+len("Posts") : l.find("blind")]
                 player1_blind_amo = l[l.find("blind")+len("blind"):]
+                pot += int(player1_blind_amo[2:])
             elif player2_id in l:
                 player2_blind_type = l[l.find("Posts")+len("Posts") : l.find("blind")]
                 player2_blind_amo = l[l.find("blind")+len("blind"):]
+                pot += int(player2_blind_amo[2:])
         elif "** POCKET CARDS **" in l:
             round_type = "pocket"
             round_types.append(round_type)
@@ -78,14 +81,17 @@ def read_hand(hand):
                     old_amo = l[l.find("$"): l.find(" to")]
                     new_amo = l[l.rfind("$"):]
                     raise_amo = int(new_amo[1:])-int(old_amo[1:])
+                    pot += raise_amo[1:]
                     play1_act = play1_act+str(raise_amo)
                 elif "Calls" in l:
                     play1_act = "call "
                     call_amo = l[l.rfind(" "):]
+                    pot += call_amo[1:]
                     play1_act = play1_act+call_amo
                 elif "Bets" in l:
                     play1_act = "bet "
                     bet_amo = l[l.rfind(" "):]
+                    pot +=bet_amo[1:]
                     play1_act = play1_act+bet_amo
                 elif "Checks" in l:
                     play1_act = "check"
@@ -103,18 +109,21 @@ def read_hand(hand):
                     old_amo = l[l.find("$"): l.find(" to")]
                     new_amo = l[l.rfind("$"):]
                     raise_amo = int(new_amo[1:])-int(old_amo[1:])
+                    pot += raise_amo[1:]
                     play2_act = play2_act+raise_amo
                     this_round = (play1_act, play2_act)
                     actions.append(this_round)
                 elif "Calls" in l:
                     play2_act = "call "
                     call_amo = l[l.rfind(" "):]
+                    pot += call_amo[1:]
                     play2_act = play2_act+call_amo
                     this_round = (play1_act, play2_act)
                     actions.append(this_round)
                 elif "Bets" in l:
                     play2_act = 'bet '
                     bet_amo = l[l.rfind(" "):]
+                    pot += bet_amo[1:]
                     play2_act = play2_act+bet_amo
                     this_round = (play1_act, play2_act)
                     actions.append(this_round)
@@ -156,7 +165,8 @@ def read_hand(hand):
         rounds.append(Round(round_types[i], players, actions[i]))
 
     return rounds
-    #hand = Hand(rounds, dealer_seatnum, stage_num, pot, table_cards, summary)
+
+    hand = Hand(rounds, dealer, stage_num, pot, table_cards, summary)
     #return hand
 
 
