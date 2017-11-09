@@ -20,6 +20,7 @@ class Deck():
 		for s in Suits:
 			for v in Values:
 				self.add(s,v)
+		shuffle(self.cards)
 	def add(self, num, suit):
 		"""Adds a card of value num and suit suit to the
 		deck"""
@@ -33,9 +34,9 @@ class Deck():
 		"""Shows all of the cards in the deck"""
 		for card in self.cards:
 			print(card.__repr__())
-	def shuffle(self):
+	#def shuffle_deck(self):
 		"""Shuffles the deck"""
-		random.shuffle(self.cards)
+	#	random.shuffle(self.cards)
 
 	def deal(self):
 		"""Returns the top card from the deck"""
@@ -116,21 +117,18 @@ class Player():
 		self.contribution += money
 		
 
-	def player_bet (self, raise_money,otherpot):
+	def player_bet (self, raise_money,reciverpot):
 		"""Takes the bet ammount and puts it in the pot
 		>>> yourpot = Pot(10000)
 		>>> player1 = Player(100000)
 		>>> player1.player_bet(5000, yourpot)
 		>>> print(yourpot.__repr__())
 		15000"""
-		def money_to_pot(self,money,reciverpot):
-			"""moves money from the self pot into anouther
-			pot
-			"""
-			self.pot.value -= money
-			reciverpot.value += money
-			self.isturn = False
-			pass
+		
+		self.pot.value -= raise_money
+		reciverpot.value += raise_money
+		self.isturn = False
+		
 
 	def player_call(self,call):
 		"""player matches other player's bet"""
@@ -139,11 +137,19 @@ class Player():
 
 		pass
 class Game():
+	def __repr__(self):
+		print((self.table.cards))
+		print(self.player1.hand.cards)
+		pot = str(self.player1.pot.value)
+		print(pot)
+		print(self.player2.hand.cards)
+		print(str(self.player2.pot.value))
 	def __init__(self, money1, money2):
 		self.table = Hand()
 		self.deck = Deck()
 		self.deck.createDeck()
-		self.tablepot = 0
+		
+		self.tablepot = Pot(0)
 		self.player1_contribution = 0
 		self.player2_contribution = 0
 		self.smallblind_ammount = 50
@@ -160,7 +166,9 @@ class Game():
 		self.player2.hand.add(self.deck.deal())
 		self.player1.hand.add(self.deck.deal())
 		self.player2.hand.add(self.deck.deal())
+
 		self.blinds(self.player1,self.player2)
+		self.__repr__()
 		self.player_move(self.player1,self.player2)
 
 
@@ -240,17 +248,22 @@ class Game():
 			player.player_fold()   #player folds
 		elif move == "Check":
 			#player maches the cotrobution of the other player
+			
 			if player.contribution < other.contribution: 
 				money = other.contribution - player.contribution
+				self.__repr__()
 				player.player_bet(money, self.tablepot)
+
 			
 		elif move == "Raise": #player bets and abount
 			money = 100
 			player.player_bet(money, self.tablepot)
+			self.__repr__()
 			self.player_move(other,player)
 		else:
 			print("input error try again")
 			self.player_move(self.player1,self.player2)
+
 
 
 			#do nothing
@@ -261,9 +274,13 @@ class Game():
    # doctest.run_docstring_examples(Game.counts_player_contrib, globals(),verbose=True)
 poker = Game(10000, 10000)
 poker.pocket()
+
 poker.flop()
+poker.__repr__()
 poker.turn()
+poker.__repr__()
 poker.river()
+poker.__repr__()
 poker.showdown()
 
 
