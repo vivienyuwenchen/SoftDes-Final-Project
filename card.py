@@ -9,14 +9,14 @@ class Card():
     def __repr__(self):
     	""" Returns the value and suit of a card"""
     	return("(%r %r)" % (  (self.suit),(self.value)))
-        
+
 class Deck():
 	def __init__(self):
 		self.cards = []
 	def createDeck(self):
 		Suits = ["of clubs", "of Diamonds", "of Spades", "of Hearts"]
 		Values = [1,2,3,4,5,6,7,8,9,10,11,12,13]
-		
+
 		for s in Suits:
 			for v in Values:
 				self.add(s,v)
@@ -94,7 +94,7 @@ class Hand():
 				twookind = twookind + 1
 			if cardvalues[value] == 4:
 				fourokind = fourokind + 1
-			
+
 		if fourokind >= 1:
 			return 1
 		elif threeokind>=1 and twookind>=1: #full house
@@ -108,18 +108,13 @@ class Hand():
 		else:
 			return 100
 
-
-
-
-
-
 class Pot():
 	def __init__(self, money):
 		self.value = money
 
-	
 	def __repr__(self):
 		return self.value
+
 class Player():
 	def __init__(self,money):
 		self.hand = Hand()
@@ -147,14 +142,14 @@ class Player():
 		store how much money the player added
 		Pot add that money to the players pot contibution
 		>>> player1 = Player(1000)
-		>>> 
+		>>>
 		>>> player1.player_contribute(100)
 
 		>>> print (player1.contribution)
 		100
 		"""
 		self.contribution += money
-		
+
 
 	def player_bet (self, raise_money,reciverpot):
 		"""Takes the bet ammount and puts it in the pot
@@ -163,12 +158,12 @@ class Player():
 		>>> player1.player_bet(5000, yourpot)
 		>>> print(yourpot.__repr__())
 		15000"""
-		
+
 		self.pot.value -= raise_money
 		self.contribution += raise_money
 		reciverpot.value += raise_money
 		self.isturn = False
-		
+
 
 	def player_call(self,call):
 		"""player matches other player's bet"""
@@ -188,7 +183,7 @@ class Game():
 		self.table = Hand()
 		self.deck = Deck()
 		self.deck.createDeck()
-		
+
 		self.tablepot = Pot(0)
 		self.player1_contribution = 0
 		self.player2_contribution = 0
@@ -216,54 +211,53 @@ class Game():
 		while self.player1.isturn == True or self.player2.isturn == True:
 			if self.player1.isturn == True:
 				self.player_move(self.player1,self.player2)
-			if self.player2.isturn == True:	
+			if self.player2.isturn == True:
 				self.player_move(self.player2,self.player1)
 		self.__repr__()
-		
-
-
-
-
 		pass
+
 	def flop(self):
 		self.table.add(self.deck.deal())
 		self.table.add(self.deck.deal())
 		self.table.add(self.deck.deal())
-		
+
 		self.player1.isturn = True
 		self.player2.isturn = True
 		while self.player1.isturn == True or self.player2.isturn == True:
 			if self.player1.isturn == True:
 				self.player_move(self.player1,self.player2)
-			if self.player2.isturn == True:	
+			if self.player2.isturn == True:
 				self.player_move(self.player2,self.player1)
 
 		"""puts three cards on the table"""
 		pass
+
 	def turn(self):
 		"""puts one card on the table"""
 		self.table.add(self.deck.deal())
-		
+
 		self.player1.isturn = True
 		self.player2.isturn = True
 		while self.player1.isturn == True or self.player2.isturn == True:
 			if self.player1.isturn == True:
 				self.player_move(self.player1,self.player2)
-			if self.player2.isturn == True:	
+			if self.player2.isturn == True:
 				self.player_move(self.player2,self.player1)
 		pass
+
 	def river(self):
 		"""puts one card on the table"""
 		self.table.add(self.deck.deal())
-		
+
 		self.player1.isturn = True
 		self.player2.isturn = True
 		while self.player1.isturn == True or self.player2.isturn == True:
 			if self.player1.isturn == True:
 				self.player_move(self.player1,self.player2)
-			if self.player2.isturn == True:	
+			if self.player2.isturn == True:
 				self.player_move(self.player2,self.player1)
 		pass
+
 	def showdown(self):
 		"""Finds Winner Gives Money"""
 		self.player1.hand.cards = self.player1.hand.cards + self.table.cards
@@ -280,9 +274,8 @@ class Game():
 			self.wins_Hand(self.player2)
 		else:
 			self.draw()
-
-		
 		print("Next Round")
+
 	def wins_Hand(self,player):
 		print("winner")
 		player.pot.value += self.tablepot.value
@@ -308,7 +301,7 @@ class Game():
 
 		#>>> Game.counts_player_contrib(player1, 100, pot)
 		#100
-		
+
 		"""
 
 #		player.player_bet(money,the_pot)
@@ -328,10 +321,8 @@ class Game():
 			player2.bigblind = False
 			player2.player_bet(self.smallblind_ammount,self.tablepot)
 			player1.player_bet(self.bigblind_ammount,self.tablepot)
-
-		
-		
 		pass
+
 	def betting():
 		"""players bet against each other"""
 	def dealCards(self,deck, player1):
@@ -347,18 +338,16 @@ class Game():
 		if move == "Fold":
 			player.player_fold()   #player folds
 			player.isturn = False
-			
+
 		elif move == "Check":
 			#player maches the cotrobution of the other player
 
-			if player.contribution < other.contribution: 
+			if player.contribution < other.contribution:
 				money = other.contribution - player.contribution
 				self.__repr__()
 				player.player_bet(money, self.tablepot)
 			player.isturn = False
-			
 
-			
 		elif move == "Raise": #player bets and abount
 			money = 100
 			player.player_bet(money, self.tablepot)
@@ -374,9 +363,6 @@ class Game():
 		self.player2.hand.cards =[]
 
 
-
-
-
 			#do nothing
 
 #if __name__ == "__main__":
@@ -386,7 +372,7 @@ class Game():
 poker = Game(10000, 10000)
 while True:
 	poker.newround()
-	
+
 	if len(poker.deck.cards) < 20:
 		poker.add_deck()
 
