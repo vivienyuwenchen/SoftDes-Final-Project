@@ -77,11 +77,7 @@ class Pot():
 	def __init__(self, money):
 		self.value = money
 
-	def money_to_pot(self,money,donorpot):
-		"""moves money from the self pot into anouther
-		pot"""
-		self.value += money
-		donorpot.value -= money
+	
 	def __repr__(self):
 		return self.value
 class Player():
@@ -127,9 +123,14 @@ class Player():
 		>>> player1.player_bet(5000, yourpot)
 		>>> print(yourpot.__repr__())
 		15000"""
-		otherpot.money_to_pot(raise_money, self.pot)
-		self.isturn = False
-		pass
+		def money_to_pot(self,money,reciverpot):
+			"""moves money from the self pot into anouther
+			pot
+			"""
+			self.pot.value -= money
+			reciverpot.value += money
+			self.isturn = False
+			pass
 
 	def player_call(self,call):
 		"""player matches other player's bet"""
@@ -138,8 +139,8 @@ class Player():
 
 		pass
 class Game():
-	def __init__(self, player1, money1, player2, money2):
-		self.table = []
+	def __init__(self, money1, money2):
+		self.table = Hand()
 		self.deck = Deck()
 		self.deck.createDeck()
 		self.tablepot = 0
@@ -150,33 +151,47 @@ class Game():
 		self.player1 = Player(money1)
 		self.player2 = Player(money2)
 
-	def add_deck():
+	def add_deck(self):
 		"""Adds another deck if the first one runs low"""
 		pass
-	def pocket():
+	def pocket(self):
 		"""deals each player 2 cards"""
-		self.deck(dealCards(player1))
-		self.deck(dealCards(player2))
-		self.deck(dealCards(player1))
-		self.deck(dealCards(player2))
-		blinds(player1,player2)
-		playeer_move(player1,player2)
+		self.player1.hand.add(self.deck.deal())
+		self.player2.hand.add(self.deck.deal())
+		self.player1.hand.add(self.deck.deal())
+		self.player2.hand.add(self.deck.deal())
+		self.blinds(self.player1,self.player2)
+		self.player_move(self.player1,self.player2)
 
 
 
 
 		pass
-	def flop():
+	def flop(self):
+		self.table.add(self.deck.deal())
+		self.table.add(self.deck.deal())
+		self.table.add(self.deck.deal())
+		self.player_move(self.player1,self.player2)
 
 		"""puts three cards on the table"""
 		pass
-	def turn():
+	def turn(self):
 		"""puts one card on the table"""
+		self.table.add(self.deck.deal())
+		
+		self.player_move(self.player1,self.player2)
 		pass
-	def river():
-		"""puts last card on the table"""
+	def river(self):
+		"""puts one card on the table"""
+		self.table.add(self.deck.deal())
+		
+		self.player_move(self.player1,self.player2)
 		pass
-	def counts_player_contrib(player, money, the_pot):
+	def showdown(self):
+		"""Finds Winner Gives Money"""
+		print("yay you made to the showdown")
+
+	def counts_player_contrib(self,player, money, the_pot):
 		""" when ever a player adds money to the table
 		Pot add that money to the players pot contibution
 		#>>> player1 = Player(1000)
@@ -192,71 +207,64 @@ class Game():
 		player.player_contribute(money)
 		(player.player_showContribution())
 
-	def blinds(player1, player2):
+	def blinds(self,player1, player2):
 		"""chooses blinds for players"""
 		if  player2.bigblind == False:
 			player1.smallblind = True
 			player2.bigblind = False
-			player1.player_bet(smallblind_ammount,self.tablepot)
-			player2.player_bet(bigblind_ammount,self.tablepot)
+			player1.player_bet(self.smallblind_ammount,self.tablepot)
+			player2.player_bet(self.bigblind_ammount,self.tablepot)
 
 		if  player2.bigblind == True:
 			player1.smallblind = True
 			player2.bigblind = False
-			player2.player_bet(smallblind_ammount,self.tablepot)
-			player1.player_bet(bigblind_ammount,self.tablepot)
+			player2.player_bet(self.smallblind_ammount,self.tablepot)
+			player1.player_bet(self.bigblind_ammount,self.tablepot)
 
 		
 		
 		pass
 	def betting():
 		"""players bet against each other"""
-	def dealCards(deck, player1):
+	def dealCards(self,deck, player1):
 		"""
 		pops cards of a deck and gives is to a player
 
 		"""
 		player1.addcard(deck.deal())
 
-	def player_move(player, other):
+	def player_move(self,player, other):
 		""" gets the move from the player"""
-		move = raw_input("Check, Raise, or Fold?>>>")
+		move = input("Check, Raise, or Fold?>>>")
 		if move == "Fold":
 			player.player_fold()   #player folds
-		if move == "Check":
+		elif move == "Check":
 			#player maches the cotrobution of the other player
 			if player.contribution < other.contribution: 
 				money = other.contribution - player.contribution
 				player.player_bet(money, self.tablepot)
 			
-		if move == "Raise": #player bets and abount
+		elif move == "Raise": #player bets and abount
 			money = 100
 			player.player_bet(money, self.tablepot)
-			other.player_move(player)
+			self.player_move(other,player)
+		else:
+			print("input error try again")
+			self.player_move(self.player1,self.player2)
+
 
 			#do nothing
 
-			
-
-
-
-
-
-
-
-
-
-
-		
-		
-
-
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()
+#if __name__ == "__main__":
+   # import doctest
+#    doctest.testmod()
    # doctest.run_docstring_examples(Game.counts_player_contrib, globals(),verbose=True)
-	
+poker = Game(10000, 10000)
+poker.pocket()
+poker.flop()
+poker.turn()
+poker.river()
+poker.showdown()
 
 
 
