@@ -116,7 +116,7 @@ class Pot():
         return self.value
 
 class Player():
-    def __init__(self,money):
+    def __init__(self,money, name):
         self.hand = Hand()
         self.pot = Pot(money)
         self.isturn = False
@@ -124,6 +124,7 @@ class Player():
         self.bigblind = False
         self.smallblind = False
         self.contribution = 0
+        self.name = name
     def player_turn(self):
         """ is used to make it the player's turn"""
         self.isturn = True
@@ -173,12 +174,12 @@ class Player():
         pass
 class Game():
     def __repr__(self):
-        print((self.table.cards))
-        print(self.player1.hand.cards)
-        pot = str(self.player1.pot.value)
-        print(pot)
-        print(self.player2.hand.cards)
-        print(str(self.player2.pot.value))
+        print("Table Cards: " + str(self.table.cards))
+        print("Player 1 Pocket: " + str(self.player1.hand.cards))
+        print("Player1 Chips: " + str(self.player1.pot.value))
+        print("Player 2 Pocket: " + str(self.player2.hand.cards))
+        print("Player2 Chips: " + str(self.player2.pot.value))
+        print()
     def __init__(self, money1, money2):
         self.table = Hand()
         self.deck = Deck()
@@ -189,8 +190,8 @@ class Game():
         self.player2_contribution = 0
         self.smallblind_ammount = 50
         self.bigblind_ammount = 100
-        self.player1 = Player(money1)
-        self.player2 = Player(money2)
+        self.player1 = Player(money1, "one")
+        self.player2 = Player(money2, "two")
 
     def add_deck(self):
         """Adds another deck if the first one runs low"""
@@ -213,15 +214,8 @@ class Game():
         while self.player1.isturn == True or self.player2.isturn == True:
             if self.player1.isturn == True:
                 self.player_move(self.player1,self.player2)
-                print("player1 move")
-                print(self.player2.folded)
             if self.player2.isturn == True:
                 self.player_move(self.player2,self.player1)
-                print("player2 move")
-                print(self.player2.folded)
-                print(self.player1.isturn)
-                print(self.player2.isturn)
-        
         pass
 
     def flop(self):
@@ -285,11 +279,12 @@ class Game():
         print("Next Round")
 
     def wins_Hand(self,player):
-        print("winner")
+        print("Winner: " + player.name)
         player.pot.value += self.tablepot.value
         self.tablepot.value = 0
-        print(str(self.player1.pot.value))
-        print(str(self.player2.pot.value))
+        print(player1.name + str(self.player1.pot.value))
+        print(player2.name + str(self.player2.pot.value))
+        print("------------")
 
     def draw(self):
         print("draw")
@@ -342,12 +337,12 @@ class Game():
 
     def player_move(self,player, other):
         """ gets the move from the player"""
-        move = input("check, raise, or fold?>>>")
+        move = input(player.name + ": check, raise, or fold?>>>")
         if move == "fold":
             player.folded = True   #player folds
             player.isturn = False
             other.isturn = False
-            
+
 
         elif move == "check":
             #player maches the cotrobution of the other player
