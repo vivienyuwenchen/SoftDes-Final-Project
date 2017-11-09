@@ -175,6 +175,7 @@ class Player():
 class Game():
     def __repr__(self):
         print("Table Cards: " + str(self.table.cards))
+        print("table Pot: " + str(self.tablepot.value))
         print("Player 1 Pocket: " + str(self.player1.hand.cards))
         print("Player1 Chips: " + str(self.player1.pot.value))
         print("Player 2 Pocket: " + str(self.player2.hand.cards))
@@ -198,7 +199,7 @@ class Game():
         self.newdeck = Deck()
         self.newdeck.createDeck()
         self.deck.cards = self.deck.cards+self.newdeck.cards
-        pass
+        
     def pocket(self):
         """deals each player 2 cards"""
         self.player1.hand.add(self.deck.deal())
@@ -216,13 +217,15 @@ class Game():
                 self.player_move(self.player1,self.player2)
             if self.player2.isturn == True:
                 self.player_move(self.player2,self.player1)
-        pass
+                print("player 1 tern: " + str(self.player1.isturn))
+                print("player 2 tern: " + str(self.player2.isturn))
+        
 
     def flop(self):
         self.table.add(self.deck.deal())
         self.table.add(self.deck.deal())
         self.table.add(self.deck.deal())
-
+        self.__repr__()
         self.player1.isturn = True
         self.player2.isturn = True
         while self.player1.isturn == True or self.player2.isturn == True:
@@ -232,12 +235,12 @@ class Game():
                 self.player_move(self.player2,self.player1)
 
         """puts three cards on the table"""
-        pass
+        
 
     def turn(self):
         """puts one card on the table"""
         self.table.add(self.deck.deal())
-
+        self.__repr__()
         self.player1.isturn = True
         self.player2.isturn = True
         while self.player1.isturn == True or self.player2.isturn == True:
@@ -250,7 +253,7 @@ class Game():
     def river(self):
         """puts one card on the table"""
         self.table.add(self.deck.deal())
-
+        self.__repr__()
         self.player1.isturn = True
         self.player2.isturn = True
         while self.player1.isturn == True or self.player2.isturn == True:
@@ -282,8 +285,8 @@ class Game():
         print("Winner: " + player.name)
         player.pot.value += self.tablepot.value
         self.tablepot.value = 0
-        print(player1.name + str(self.player1.pot.value))
-        print(player2.name + str(self.player2.pot.value))
+        print(self.player1.name + str(self.player1.pot.value))
+        print(self.player2.name + str(self.player2.pot.value))
         print("------------")
 
     def draw(self):
@@ -344,7 +347,7 @@ class Game():
             other.isturn = False
 
 
-        elif move == "check":
+        elif move == move:
             #player maches the cotrobution of the other player
 
             if player.contribution < other.contribution:
@@ -352,7 +355,7 @@ class Game():
                 self.__repr__()
                 player.player_bet(money, self.tablepot)
             player.isturn = False
-            player.istrun = True
+            
 
         elif move == "raise": #player bets and abount
             money = 100
@@ -378,32 +381,3 @@ class Game():
 #    doctest.testmod()
    # doctest.run_docstring_examples(Game.counts_player_contrib, globals(),verbose=True)
 
-
-
-
-
-#print(Ace.__repr__())
-#mydeck.showcards()
-#myhand = Hand()
-#for i in range(5):
-    #myhand.add(mydeck.deal())
-#myhand.add(Card(" of Spades", 13))
-#myhand.add(Card(" of Diamonds", 13))
-#myhand.add(Card("of Spades", 12))
-#myhand.add(Card(" of Hearts", 12))
-#myhand.add(Card(" of clubs", 13))
-#myhand.showcards()
-#myhand.order()
-#myhand.has_twos()
-#mypot = Pot(10000)
-#yourpot = Pot(10000)
-#yourpot.money_to_pot(10000, mypot)
-#print(mypot.__repr__())
-#print(yourpot.__repr__())
-#yourpot = Pot(10000)
-#player1 = Player(100000)
-#player1.player_bet(5000, yourpot)
-##print(yourpot.__repr__())
-#player2 = Player(100000)
-#poker = Game(player1,player2,11,22)
-#poker.deck.showcards()
