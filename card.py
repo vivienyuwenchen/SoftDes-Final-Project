@@ -1,4 +1,4 @@
-from collections import defaultdict #frequwords
+from collections import * #frequwords
 from random import*
 class Card():
     """ Rudimentary card class to track suit and value """
@@ -66,14 +66,53 @@ class Hand():
 		"""Orders the cards in the hand"""
 		self.cards.sort(key=lambda x: x.value, reverse=False)
 		self.showcards()
-	def has_twos(self):
+	def playerhands(self):
 		"""Counts the number of each card in the hand
 		puts results in a dict. """
 		cardvalues = defaultdict(int)
 		havevalues = []
-
+		handvalue = 100
+		twookind = 0
+		threeokind = 0
+		fourokind = 0
 		for card in self.cards:
-			cardvalues[card.value] += 1
+			cardvalues[card.suit] += 1 #suit and value are swaped somwhere
+		#checks for a streight
+		#print (cardvalues)
+		for i in range(len(cardvalues)-5):
+			if i in cardvalues:
+				if i+1 in cardvalues:
+					if i + 2 in cardvalues:
+						if i + 3 in cardvalues:
+							if i + 4 in cardvalues:
+								return(3)
+		#looks for two and three of a kind
+		for value in cardvalues:
+			if cardvalues[value] == 3:
+				threeokind = threeokind + 1
+			if cardvalues[value] == 2:
+				twookind = twookind + 1
+			if cardvalues[value] == 4:
+				fourokind = fourokind + 1
+			
+		if fourokind >= 1:
+			return 1
+		elif threeokind>=1 and twookind>=1: #full house
+			return(2)
+		elif threeokind >=1:
+			return(4)
+		elif twookind >= 2:
+			return 5
+		elif twookind >=1:
+			return (6)
+		else:
+			return 100
+
+
+
+
+
+
 class Pot():
 	def __init__(self, money):
 		self.value = money
@@ -160,6 +199,9 @@ class Game():
 
 	def add_deck(self):
 		"""Adds another deck if the first one runs low"""
+		self.newdeck = Deck()
+		self.newdeck.createDeck()
+		self.deck.cards = self.deck.cards+self.newdeck.cards
 		pass
 	def pocket(self):
 		"""deals each player 2 cards"""
@@ -181,6 +223,7 @@ class Game():
 		self.table.add(self.deck.deal())
 		self.table.add(self.deck.deal())
 		self.player_move(self.player1,self.player2)
+		self.player_move(self.player2,self.player1)
 
 		"""puts three cards on the table"""
 		pass
@@ -189,18 +232,45 @@ class Game():
 		self.table.add(self.deck.deal())
 		
 		self.player_move(self.player1,self.player2)
+		self.player_move(self.player2,self.player1)
 		pass
 	def river(self):
 		"""puts one card on the table"""
 		self.table.add(self.deck.deal())
 		
 		self.player_move(self.player1,self.player2)
+		self.player_move(self.player2,self.player1)
 		pass
 	def showdown(self):
 		"""Finds Winner Gives Money"""
-		print("yay you made to the showdown")
+		self.player1.hand.cards = self.player1.hand.cards + self.table.cards
+	#	print (self.player1.hand.cards)
+		player1hands = self.player1.hand.playerhands()
+		self.player2.hand.cards = self.player2.hand.cards + self.table.cards
+	#	print (self.player2.hand.cards)
+		player2hands = self.player2.hand.playerhands()
+		print (player1hands)
+		print (player2hands)
+		if player1hands<player2hands:
+			self.wins_Hand(self.player1)
+		elif player2hands<player1hands:
+			self.wins_Hand(self.player2)
+		else:
+			self.draw()
+
+		
+		print("Next Round")
 	def wins_Hand(self,player):
+		print("winner")
 		player.pot.value += self.tablepot.value
+		self.tablepot.value = 0
+		print(str(self.player1.pot.value))
+		print(str(self.player2.pot.value))
+
+	def draw(self):
+		print("draw")
+		self.player1.pot.value += self.tablepot.value/2
+		self.player2.pot.value += self.tablepot.value/2
 		self.tablepot.value = 0
 		print(str(self.player1.pot.value))
 		print(str(self.player2.pot.value))
@@ -270,6 +340,12 @@ class Game():
 		else:
 			print("input error try again")
 			self.player_move(self.player1,self.player2)
+	def newround(self):
+		self.table.cards = []
+		self.player1.hand.cards =[]
+		self.player2.hand.cards =[]
+
+
 
 
 
@@ -280,22 +356,28 @@ class Game():
 #    doctest.testmod()
    # doctest.run_docstring_examples(Game.counts_player_contrib, globals(),verbose=True)
 poker = Game(10000, 10000)
-poker.pocket()
-if poker.player1.folded == False and poker.player1.folded == False:
-	poker.flop()
-	poker.__repr__()
-if poker.player1.folded == False and poker.player1.folded == False:
-	poker.turn()
-	poker.__repr__()
-if poker.player1.folded == False and poker.player1.folded == False:
-	poker.river()
-	poker.__repr__()
-if poker.player1.folded == False and poker.player1.folded == False:
-	poker.showdown()
-if poker.player1.folded == True:
-	poker.wins_Hand(poker.player2)
-else:
-	poker.wins_Hand(poker.player1)
+while True:
+	poker.newround()
+	
+	if len(poker.deck.cards) < 20:
+		poker.add_deck()
+
+	poker.pocket()
+	if poker.player1.folded == False and poker.player1.folded == False:
+		poker.flop()
+		poker.__repr__()
+	if poker.player1.folded == False and poker.player1.folded == False:
+		poker.turn()
+		poker.__repr__()
+	if poker.player1.folded == False and poker.player1.folded == False:
+		poker.river()
+		poker.__repr__()
+	if poker.player1.folded == False and poker.player1.folded == False:
+		poker.showdown()
+	elif poker.player1.folded == True:
+		poker.wins_Hand(poker.player2)
+	else:
+		poker.wins_Hand(poker.player1)
 
 
 
