@@ -126,6 +126,7 @@ class Player():
 		15000"""
 		
 		self.pot.value -= raise_money
+		self.contribution += raise_money
 		reciverpot.value += raise_money
 		self.isturn = False
 		
@@ -199,7 +200,7 @@ class Game():
 		"""Finds Winner Gives Money"""
 		print("yay you made to the showdown")
 
-	def counts_player_contrib(self,player, money, the_pot):
+#	def counts_player_contrib(self,player, money, the_pot):
 		""" when ever a player adds money to the table
 		Pot add that money to the players pot contibution
 		#>>> player1 = Player(1000)
@@ -211,9 +212,9 @@ class Game():
 		
 		"""
 
-		player.player_bet(money,the_pot)
-		player.player_contribute(money)
-		(player.player_showContribution())
+#		player.player_bet(money,the_pot)
+#		player.player_contribute(money)
+#		(player.player_showContribution())
 
 	def blinds(self,player1, player2):
 		"""chooses blinds for players"""
@@ -248,7 +249,7 @@ class Game():
 			player.player_fold()   #player folds
 		elif move == "Check":
 			#player maches the cotrobution of the other player
-			
+
 			if player.contribution < other.contribution: 
 				money = other.contribution - player.contribution
 				self.__repr__()
