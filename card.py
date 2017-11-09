@@ -199,6 +199,12 @@ class Game():
 	def showdown(self):
 		"""Finds Winner Gives Money"""
 		print("yay you made to the showdown")
+	def wins_Hand(self,player):
+		player.pot.value += self.tablepot.value
+		self.tablepot.value = 0
+		print(str(self.player1.pot.value))
+		print(str(self.player2.pot.value))
+
 
 #	def counts_player_contrib(self,player, money, the_pot):
 		""" when ever a player adds money to the table
@@ -275,14 +281,23 @@ class Game():
    # doctest.run_docstring_examples(Game.counts_player_contrib, globals(),verbose=True)
 poker = Game(10000, 10000)
 poker.pocket()
+if poker.player1.folded == False and poker.player1.folded == False:
+	poker.flop()
+	poker.__repr__()
+if poker.player1.folded == False and poker.player1.folded == False:
+	poker.turn()
+	poker.__repr__()
+if poker.player1.folded == False and poker.player1.folded == False:
+	poker.river()
+	poker.__repr__()
+if poker.player1.folded == False and poker.player1.folded == False:
+	poker.showdown()
+if poker.player1.folded == True:
+	poker.wins_Hand(poker.player2)
+else:
+	poker.wins_Hand(poker.player1)
 
-poker.flop()
-poker.__repr__()
-poker.turn()
-poker.__repr__()
-poker.river()
-poker.__repr__()
-poker.showdown()
+
 
 
 
