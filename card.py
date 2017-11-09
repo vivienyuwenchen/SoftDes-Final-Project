@@ -206,14 +206,22 @@ class Game():
 		self.player2.hand.add(self.deck.deal())
 
 		self.blinds(self.player1,self.player2)
+		self.__repr__()
 		self.player1.isturn = True
 		self.player2.isturn = True
+		#Print(player2.folded)
 		while self.player1.isturn == True or self.player2.isturn == True:
 			if self.player1.isturn == True:
 				self.player_move(self.player1,self.player2)
+				print("player1 move")
+				print(self.player2.folded)
 			if self.player2.isturn == True:
 				self.player_move(self.player2,self.player1)
-		self.__repr__()
+				print("player2 move")
+				print(self.player2.folded)
+				print(self.player1.isturn)
+				print(self.player2.isturn)
+		
 		pass
 
 	def flop(self):
@@ -334,12 +342,14 @@ class Game():
 
 	def player_move(self,player, other):
 		""" gets the move from the player"""
-		move = input("Check, Raise, or Fold?>>>")
-		if move == "Fold":
-			player.player_fold()   #player folds
+		move = input("check, raise, or fold?>>>")
+		if move == "fold":
+			player.folded = True   #player folds
 			player.isturn = False
+			other.isturn = False
+			
 
-		elif move == "Check":
+		elif move == "check":
 			#player maches the cotrobution of the other player
 
 			if player.contribution < other.contribution:
@@ -347,8 +357,9 @@ class Game():
 				self.__repr__()
 				player.player_bet(money, self.tablepot)
 			player.isturn = False
+			player.istrun = True
 
-		elif move == "Raise": #player bets and abount
+		elif move == "raise": #player bets and abount
 			money = 100
 			player.player_bet(money, self.tablepot)
 			self.__repr__()
@@ -361,6 +372,8 @@ class Game():
 		self.table.cards = []
 		self.player1.hand.cards =[]
 		self.player2.hand.cards =[]
+		self.player1.folded = False
+		self.player2.folded = False
 
 
 			#do nothing
@@ -369,29 +382,6 @@ class Game():
    # import doctest
 #    doctest.testmod()
    # doctest.run_docstring_examples(Game.counts_player_contrib, globals(),verbose=True)
-poker = Game(10000, 10000)
-while True:
-	poker.newround()
-
-	if len(poker.deck.cards) < 20:
-		poker.add_deck()
-
-	poker.pocket()
-	if poker.player1.folded == False and poker.player1.folded == False:
-		poker.flop()
-		poker.__repr__()
-	if poker.player1.folded == False and poker.player1.folded == False:
-		poker.turn()
-		poker.__repr__()
-	if poker.player1.folded == False and poker.player1.folded == False:
-		poker.river()
-		poker.__repr__()
-	if poker.player1.folded == False and poker.player1.folded == False:
-		poker.showdown()
-	elif poker.player1.folded == True:
-		poker.wins_Hand(poker.player2)
-	else:
-		poker.wins_Hand(poker.player1)
 
 
 
