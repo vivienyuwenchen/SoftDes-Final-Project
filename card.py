@@ -211,8 +211,15 @@ class Game():
 		self.player2.hand.add(self.deck.deal())
 
 		self.blinds(self.player1,self.player2)
+		self.player1.isturn = True
+		self.player2.isturn = True
+		while self.player1.isturn == True or self.player2.isturn == True:
+			if self.player1.isturn == True:
+				self.player_move(self.player1,self.player2)
+			if self.player2.isturn == True:	
+				self.player_move(self.player2,self.player1)
 		self.__repr__()
-		self.player_move(self.player1,self.player2)
+		
 
 
 
@@ -222,8 +229,14 @@ class Game():
 		self.table.add(self.deck.deal())
 		self.table.add(self.deck.deal())
 		self.table.add(self.deck.deal())
-		self.player_move(self.player1,self.player2)
-		self.player_move(self.player2,self.player1)
+		
+		self.player1.isturn = True
+		self.player2.isturn = True
+		while self.player1.isturn == True or self.player2.isturn == True:
+			if self.player1.isturn == True:
+				self.player_move(self.player1,self.player2)
+			if self.player2.isturn == True:	
+				self.player_move(self.player2,self.player1)
 
 		"""puts three cards on the table"""
 		pass
@@ -231,15 +244,25 @@ class Game():
 		"""puts one card on the table"""
 		self.table.add(self.deck.deal())
 		
-		self.player_move(self.player1,self.player2)
-		self.player_move(self.player2,self.player1)
+		self.player1.isturn = True
+		self.player2.isturn = True
+		while self.player1.isturn == True or self.player2.isturn == True:
+			if self.player1.isturn == True:
+				self.player_move(self.player1,self.player2)
+			if self.player2.isturn == True:	
+				self.player_move(self.player2,self.player1)
 		pass
 	def river(self):
 		"""puts one card on the table"""
 		self.table.add(self.deck.deal())
 		
-		self.player_move(self.player1,self.player2)
-		self.player_move(self.player2,self.player1)
+		self.player1.isturn = True
+		self.player2.isturn = True
+		while self.player1.isturn == True or self.player2.isturn == True:
+			if self.player1.isturn == True:
+				self.player_move(self.player1,self.player2)
+			if self.player2.isturn == True:	
+				self.player_move(self.player2,self.player1)
 		pass
 	def showdown(self):
 		"""Finds Winner Gives Money"""
@@ -323,6 +346,8 @@ class Game():
 		move = input("Check, Raise, or Fold?>>>")
 		if move == "Fold":
 			player.player_fold()   #player folds
+			player.isturn = False
+			
 		elif move == "Check":
 			#player maches the cotrobution of the other player
 
@@ -330,13 +355,16 @@ class Game():
 				money = other.contribution - player.contribution
 				self.__repr__()
 				player.player_bet(money, self.tablepot)
+			player.isturn = False
+			
 
 			
 		elif move == "Raise": #player bets and abount
 			money = 100
 			player.player_bet(money, self.tablepot)
 			self.__repr__()
-			self.player_move(other,player)
+			player.isturn = False
+			other.isturn = True
 		else:
 			print("input error try again")
 			self.player_move(self.player1,self.player2)
