@@ -2,29 +2,29 @@ from collections import * #frequwords
 from random import*
 class Card():
     """ Rudimentary card class to track suit and value """
-    def __init__(self, suit, value):
-
+    def __init__(self, value, suit):
         self.suit = suit
         self.value = value
     def __repr__(self):
         """ Returns the value and suit of a card"""
-        return("(%r %r)" % (  (self.suit),(self.value)))
+        return str(self.value)+str(self.suit)
+        #return("(%r %r)" % (  (self.suit),(self.value)))
 
 class Deck():
     def __init__(self):
         self.cards = []
     def createDeck(self):
-        Suits = ["of clubs", "of Diamonds", "of Spades", "of Hearts"]
-        Values = [1,2,3,4,5,6,7,8,9,10,11,12,13]
+        Suits = ["C", "D", "S", "H"]
+        Values = ["2","3","4","5","6","7","8","9","T","J","Q", "K", "A"]
 
         for s in Suits:
             for v in Values:
-                self.add(s,v)
+                self.add(v,s)
         shuffle(self.cards)
-    def add(self, num, suit):
+    def add(self, value, suit):
         """Adds a card of value num and suit suit to the
         deck"""
-        self.cards.append(Card(suit,num))
+        self.cards.append(Card(value,suit))
 
     def addcard(self, thiscard):
         """Adds an object to the deck"""
@@ -66,12 +66,118 @@ class Hand():
         """Orders the cards in the hand"""
         self.cards.sort(key=lambda x: x.value, reverse=False)
         self.showcards()
+
+    def isflush(self,cardvalues):
+        card1 = cardvalues[0:5]
+        card2 = cardvalues[1:6]
+        card3 = cardvalues[2:7]
+        cards = [card1,card2,card3]
+        result = []
+        for c in cards:
+            high = self.highcard(c)
+            sorted_cards = []
+            for card in c:
+                sorted_cards.append(card[-1:])
+            if sorted_cards[-1] == sorted_cards[0]:
+                result.append((True, high))
+            else:
+                result.append((False,high))
+
+        r = sorted(result)
+        print(r[-1])
+        return r[-1]
+
+    def isstraight(self,cardvalues):
+        #not working
+        sorted_cards = sorted(cardvalues)
+        for card in sorted_cards:
+            card = card[:-1]
+        check = int(sorted_cards[-1]) - int(sorted_cards[0])
+        if check == 4:
+            return True
+        else:
+            return False
+
+    def ispair(self, cardvalues):
+        sorted_cards = sorted(cardvalues)
+        for card in sorted_cards:
+            card = card[:-1]
+
+        pair_vals = []
+        for i in range(0,len(sorted_cards)-1):
+            card1 = sorted_cards[i]
+            card2 = sorted_cards[i+1]
+            if card1 == card2:
+                pair_vals.append(card1)
+
+        if len(pair_vals) != 0:
+            return (True, pair_vals)
+        else:
+            return (False, pair_vals)
+
+
+    def highcard(self,cardvalues):
+        sorted_cards = sorted(cardvalues)
+        high = sorted_cards[-1]
+        return high[:-1]
+
     def playerhands(self):
         """Counts the number of each card in the hand
         puts results in a dict. """
-        cardvalues = defaultdict(int)
-        havevalues = []
+        cardvalues = self.cards
+
+        #some mapping function here
+        string_values = ["2","3","4","5","6","7","8","9","T","J","Q", "K", "A"]
+        values = [2,3,4,5,6,7,8,9,10,11,12,13,14]
+        value_map = dict(zip(string_values,values))
+
+        hand_keys = ["strt flsh", "four", "f_hs", "flsh", "strt", "three", "two pair", "pair", "high"]
+
+        #run dictionary
+        new_list = []
+        for c in cardvalues:
+            print(c)
+            c = str(c)
+            new_card = str(value_map[c[:1]])+str(c[-1:])
+            new_list.append(new_card)
+
+        #check for straight flush
+
+        #checks for 4 of a kind
+
+        #checks for full house
+
+        #checks for flush
+        #check = self.isflush(new_list)
+        #if check[0]:
+            #return ("flsh", check[1])
+
+        #checks for straight
+
+        #checks for 3 of a kind
+
+        #checks for 2 pairs
+
+        #checks for pair
+        check = self.ispair(new_list)
+        if check[0]:
+            print("is pair")
+            print(check[1])
+            return("pair", check[1])
+        #checks high card
+
+
+
+
+
+
+
+
+        """
+
+        #default hand rank
         handvalue = 100
+
         twookind = 0
         threeokind = 0
         fourokind = 0
@@ -107,6 +213,8 @@ class Hand():
             return (6)
         else:
             return 100
+
+        """
 
 class Pot():
     def __init__(self, money):
@@ -199,7 +307,7 @@ class Game():
         self.newdeck = Deck()
         self.newdeck.createDeck()
         self.deck.cards = self.deck.cards+self.newdeck.cards
-        
+
     def pocket(self):
         """deals each player 2 cards"""
         self.player1.hand.add(self.deck.deal())
@@ -219,7 +327,7 @@ class Game():
                 self.player_move(self.player2,self.player1)
                 print("player 1 tern: " + str(self.player1.isturn))
                 print("player 2 tern: " + str(self.player2.isturn))
-        
+
 
     def flop(self):
         self.table.add(self.deck.deal())
@@ -235,7 +343,7 @@ class Game():
                 self.player_move(self.player2,self.player1)
 
         """puts three cards on the table"""
-        
+
 
     def turn(self):
         """puts one card on the table"""
@@ -355,7 +463,7 @@ class Game():
                 self.__repr__()
                 player.player_bet(money, self.tablepot)
             player.isturn = False
-            
+
 
         elif move == "raise": #player bets and abount
             money = 100
@@ -380,4 +488,3 @@ class Game():
    # import doctest
 #    doctest.testmod()
    # doctest.run_docstring_examples(Game.counts_player_contrib, globals(),verbose=True)
-
