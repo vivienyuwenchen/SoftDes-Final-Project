@@ -67,36 +67,51 @@ class Hand():
         self.cards.sort(key=lambda x: x.value, reverse=False)
         self.showcards()
 
-    def isflush(self,cardvalues):
-        card1 = cardvalues[0:5]
-        card2 = cardvalues[1:6]
-        card3 = cardvalues[2:7]
-        cards = [card1,card2,card3]
+
+    def isflush(self, cardvalues):
+        suits = []
+        for card in cardvalues:
+            suits.append((str(card[-1:]), int(card[:-1])))
+
+        sorted_suits = sorted(suits)
+        card1, card2, card3 = sorted_suits[0:5], sorted_suits[1:6], sorted_suits[2:7]
+        card_set = [card1, card2, card3]
+
         result = []
-        for c in cards:
-            high = self.highcard(c)
-            sorted_cards = []
-            for card in c:
-                sorted_cards.append(card[-1:])
-            if sorted_cards[-1] == sorted_cards[0]:
-                result.append((True, high))
-            else:
-                result.append((False,high))
+        for cards in card_set:
+            if cards[0][0] == cards[-1][0]:
+                result.append(cards[-1][1])
 
-        r = sorted(result)
-        print(r[-1])
-        return r[-1]
-
-    def isstraight(self,cardvalues):
-        #not working
-        sorted_cards = sorted(cardvalues)
-        for card in sorted_cards:
-            card = card[:-1]
-        check = int(sorted_cards[-1]) - int(sorted_cards[0])
-        if check == 4:
-            return True
+        result = sorted(result, reverse=True)
+        if result:
+            return (True, result[0])
         else:
-            return False
+            return (False, 0)
+
+
+    def isstraight(self, cardvalues):
+        values = []
+        for card in cardvalues:
+            values.append(int(card[:-1]))
+
+        sorted_values = sorted(values)
+        card1, card2, card3 = sorted_values[0:5], sorted_values[1:6], sorted_values[2:7]
+        card_set = [card1, card2, card3]
+
+        result = []
+        for cards in card_set:
+            if cards[1] == cards[0] + 1:
+                if cards[2] == cards[1] + 1:
+                    if cards[3] == cards[2] + 1:
+                        if cards[4] == cards[3] + 1:
+                            result.append(cards[-1])
+
+        result = sorted(result, reverse=True)
+        if result:
+            return (True, result[0])
+        else:
+            return (False, 0)
+
 
     def ispair(self,cardvalues):
         sorted_cards = sorted(cardvalues)
