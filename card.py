@@ -98,7 +98,7 @@ class Hand():
         else:
             return False
 
-    def ispair(self, cardvalues):
+    def ispair(self,cardvalues):
         sorted_cards = sorted(cardvalues)
         for card in sorted_cards:
             card = card[:-1]
@@ -107,8 +107,8 @@ class Hand():
         for i in range(0,len(sorted_cards)-1):
             card1 = sorted_cards[i]
             card2 = sorted_cards[i+1]
-            if card1 == card2:
-                pair_vals.append(card1)
+            if card1[:-1] == card2[:-1]:
+                pair_vals.append(card1[:-1])
 
         if len(pair_vals) != 0:
             return (True, pair_vals)
@@ -161,11 +161,8 @@ class Hand():
         #checks for pair
         check = self.ispair(new_list)
         if check[0]:
-            print("is pair")
-            print(check[1])
             return("pair", check[1])
         #checks high card
-
 
 
 
@@ -215,6 +212,11 @@ class Hand():
             return 100
 
         """
+
+    def score_hand(self, points):
+        scores = points[1]
+        s = sorted(scores)
+        return s[-1]
 
 class Pot():
     def __init__(self, money):
@@ -375,10 +377,12 @@ class Game():
         """Finds Winner Gives Money"""
         self.player1.hand.cards = self.player1.hand.cards + self.table.cards
     #   print (self.player1.hand.cards)
-        player1hands = self.player1.hand.playerhands()
+        points1 = self.player1.hand.playerhands()
+        player1hands = self.player1.hand.score_hand(points1)
         self.player2.hand.cards = self.player2.hand.cards + self.table.cards
     #   print (self.player2.hand.cards)
-        player2hands = self.player2.hand.playerhands()
+        points2 = self.player2.hand.playerhands()
+        player2hands = self.player2.hand.score_hand(points2)
         print (player1hands)
         print (player2hands)
         if player1hands<player2hands:
