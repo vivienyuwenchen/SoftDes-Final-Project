@@ -156,6 +156,43 @@ class Hand():
         else:
             return (False, pair_vals)
 
+    def isthree(self, cardvalues):
+        check = self.ispair(cardvalues)
+        if check[0]:
+            pairs = check[1]
+            if len(pairs) >= 2:
+                for i in range(0, len(pairs)-1):
+                    if pairs[i] == pairs[i+1]:
+                        return ("three", pairs[i])
+
+    def isfour(self, cardvalues):
+        check = self.ispair(cardvalues)
+        if check[0]:
+            pairs = check[1]
+            if len(pairs) >= 3:
+                for i in range(0, len(pairs)-2):
+                    if (pairs[i] == pairs[i+1]) and (pairs[i+1] == pairs[i+2]):
+                        return ("four", pairs[i])
+
+    def isdoublepair(self,cardvalues):
+        check = self.ispair(cardvalues)
+        if check[0]:
+            pairs = check[1]
+            if len(pairs) == 2:
+                if pairs[0] != pairs[1]:
+                    if int(pairs[0]) > int(pairs[1]):
+                        return ("two pair", pairs[0])
+                    else:
+                        return ("two pair", pairs[1])
+
+    def isfullhouse(self, cardvalues):
+        three_check = self.isthree(cardvalues)
+        if three_check:
+            pairs = self.ispair(cardvalues)
+            #remove three from pair check
+            if len(pairs[1])>2:
+                return ('f_hs', three_check[1])
+
 
     def highcard(self,cardvalues):
         values = []
@@ -192,8 +229,14 @@ class Hand():
             return("strt flsh", check[1])
 
         #checks for 4 of a kind
+        check = self.isfour(new_list)
+        if check:
+            return check
 
         #checks for full house
+        check = self.isfullhouse(new_list)
+        if check:
+            return check
 
         #checks for flush
         check = self.isflush(new_list)
@@ -205,70 +248,35 @@ class Hand():
         if check[0]:
             return("strt", check[1])
 
-        #checks for 3 of a kind
+        #checks for 3 of a kind, and 2 pairs
+        check = self.isthree(new_list)
+        if check:
+            return check
 
         #checks for 2 pairs
+        check = self.isdoublepair(new_list)
+        if check:
+            return check
 
         #checks for pair
         check = self.ispair(new_list)
         if check[0]:
-            return("pair", check[1])
+            pair = check[1]
+            return("pair", pair[0])
 
         #checks high card
+        return ("high", self.highcard(new_list))
 
-
-
-
-
-
-
-        """
-
-        #default hand rank
-        handvalue = 100
-
-        twookind = 0
-        threeokind = 0
-        fourokind = 0
-        for card in self.cards:
-            cardvalues[card.suit] += 1 #suit and value are swaped somwhere
-        #checks for a streight
-        #print (cardvalues)
-        for i in range(len(cardvalues)-5):
-            if i in cardvalues:
-                if i+1 in cardvalues:
-                    if i + 2 in cardvalues:
-                        if i + 3 in cardvalues:
-                            if i + 4 in cardvalues:
-                                return(3)
-        #looks for two and three of a kind
-        for value in cardvalues:
-            if cardvalues[value] == 3:
-                threeokind = threeokind + 1
-            if cardvalues[value] == 2:
-                twookind = twookind + 1
-            if cardvalues[value] == 4:
-                fourokind = fourokind + 1
-
-        if fourokind >= 1:
-            return 1
-        elif threeokind>=1 and twookind>=1: #full house
-            return(2)
-        elif threeokind >=1:
-            return(4)
-        elif twookind >= 2:
-            return 5
-        elif twookind >=1:
-            return (6)
-        else:
-            return 100
-
-        """
 
     def score_hand(self, points):
-        scores = points[1]
-        s = sorted(scores)
-        return s[-1]
+        hand_keys = ["strt flsh", "four", "f_hs", "flsh", "strt", "three", "two pair", "pair", "high"]
+        values = [240,210,180,150,120,90,60,30,0]
+        value_map = dict(zip(hand_keys,values))
+
+        type_score = str(points[0])
+        s = int(value_map[type_score])
+        s += int(points[1])
+        return s
 
 class Pot():
     def __init__(self, money):
@@ -430,16 +438,18 @@ class Game():
         self.player1.hand.cards = self.player1.hand.cards + self.table.cards
     #   print (self.player1.hand.cards)
         points1 = self.player1.hand.playerhands()
+        print(points1)
         player1hands = self.player1.hand.score_hand(points1)
+        print(player1hands)
         self.player2.hand.cards = self.player2.hand.cards + self.table.cards
     #   print (self.player2.hand.cards)
         points2 = self.player2.hand.playerhands()
+        print(points2)
         player2hands = self.player2.hand.score_hand(points2)
-        print (player1hands)
-        print (player2hands)
-        if player1hands<player2hands:
+        print(player2hands)
+        if player1hands>player2hands:
             self.wins_Hand(self.player1)
-        elif player2hands<player1hands:
+        elif player2hands>player1hands:
             self.wins_Hand(self.player2)
         else:
             self.draw()
