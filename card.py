@@ -271,12 +271,30 @@ class Hand():
     def score_hand(self, points):
         hand_keys = ["strt flsh", "four", "f_hs", "flsh", "strt", "three", "two pair", "pair", "high"]
         values = [240,210,180,150,120,90,60,30,0]
-        value_map = dict(zip(hand_keys,values))
+        hand_map = dict(zip(hand_keys,values))
 
         type_score = str(points[0])
-        s = int(value_map[type_score])
+        s = int(hand_map[type_score])
         s += int(points[1])
+
         return s
+
+    def tiebreaker(self):
+        cardvalues = self.cards
+
+        #some mapping function here
+        string_values = ["2","3","4","5","6","7","8","9","T","J","Q", "K", "A"]
+        values = [2,3,4,5,6,7,8,9,10,11,12,13,14]
+        value_map = dict(zip(string_values,values))
+        new_list = []
+        for c in cardvalues:
+            print(c)
+            c = str(c)
+            new_card = value_map[c[:1]]
+            new_list.append(new_card)
+
+        h = sorted(new_list)
+        return h
 
 class Pot():
     def __init__(self, money):
