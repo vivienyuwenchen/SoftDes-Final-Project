@@ -134,7 +134,7 @@ class Hand():
 
         correct_results = sorted(correct_results, reverse=True)
         if correct_results:
-            return (True, results[0][0])
+            return (True, correct_results[0])
         else:
             return (False, 0)
 
