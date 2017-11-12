@@ -113,6 +113,32 @@ class Hand():
             return (False, 0)
 
 
+    def isstraightflush(self, cardvalues):
+        suits = []
+        for card in cardvalues:
+            suits.append((str(card[-1:]), int(card[:-1])))
+
+        sorted_suits = sorted(suits)
+        card1, card2, card3 = sorted_suits[0:5], sorted_suits[1:6], sorted_suits[2:7]
+        card_set = [card1, card2, card3]
+
+        results = []
+        for cards in card_set:
+            if cards[0][0] == cards[-1][0]:
+                results.append((cards[-1][1], cards[0][1]))
+
+        correct_results = []
+        for result in results:
+            if result[0] == result[1] + 4:
+                correct_results.append(result[0])
+
+        correct_results = sorted(correct_results, reverse=True)
+        if correct_results:
+            return (True, results[0][0])
+        else:
+            return (False, 0)
+
+
     def ispair(self,cardvalues):
         sorted_cards = sorted(cardvalues)
         for card in sorted_cards:
