@@ -158,9 +158,13 @@ class Hand():
 
 
     def highcard(self,cardvalues):
-        sorted_cards = sorted(cardvalues)
-        high = sorted_cards[-1]
-        return high[:-1]
+        values = []
+        for card in cardvalues:
+            values.append(int(card[:-1]))
+
+        sorted_values = sorted(values, reverse=True)
+        return sorted_values[0]
+
 
     def playerhands(self):
         """Counts the number of each card in the hand
@@ -183,17 +187,23 @@ class Hand():
             new_list.append(new_card)
 
         #check for straight flush
+        check = self.isstraightflush(new_list)
+        if check[0]:
+            return("strt flsh", check[1])
 
         #checks for 4 of a kind
 
         #checks for full house
 
         #checks for flush
-        #check = self.isflush(new_list)
-        #if check[0]:
-            #return ("flsh", check[1])
+        check = self.isflush(new_list)
+        if check[0]:
+            return ("flsh", check[1])
 
         #checks for straight
+        check = self.isstraight(new_list)
+        if check[0]:
+            return("strt", check[1])
 
         #checks for 3 of a kind
 
@@ -203,6 +213,7 @@ class Hand():
         check = self.ispair(new_list)
         if check[0]:
             return("pair", check[1])
+
         #checks high card
 
 
