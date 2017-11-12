@@ -14,10 +14,23 @@ def game():
         name = request.form['name']
     else:
         name = 'Sara'
-    pocket1 = "/static/images/{}.png".format(get_card())
-    pocket2 = "/static/images/{}.png".format(get_card())
-    return render_template('game.html', name=name, pocket1=pocket1,
-                            pocket2=pocket2)
+
+    back = 'purple_back'
+    pocket11 = "/static/images/{}.png".format(back)
+    pocket12 = "/static/images/{}.png".format(back)
+    pocket21 = "/static/images/{}.png".format(back)
+    pocket22 = "/static/images/{}.png".format(back)
+    flop1 = "/static/images/{}.png".format(back)
+    flop2 = "/static/images/{}.png".format(back)
+    flop3 = "/static/images/{}.png".format(back)
+    turn = "/static/images/{}.png".format(back)
+    river = "/static/images/{}.png".format(back)
+    money1 = 10000
+    money2 = 10000
+    pot = 100
+    return render_template('game.html', name=name, pocket11=pocket11, pocket12=pocket12,
+        pocket21=pocket21, pocket22=pocket22, flop1=flop1, flop2=flop2, flop3=flop3,
+        turn=turn, river=river, money1=money1, money2=money2, pot=pot)
 #    else:
 #        return redirect(url_for('main'))
 

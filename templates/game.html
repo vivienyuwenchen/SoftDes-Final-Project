@@ -14,26 +14,52 @@
 
             Welcome, {{name}}!<br><br>
 
-            <img src={{pocket1}} alt="pocket1" style="width:100px;height:150px;">
-            <img src={{pocket2}} alt="pocket2" style="width:100px;height:150px;">
+            <img src={{flop1}} alt="flop1" style="width:100px;height:150px;">
+            <img src={{flop2}} alt="flop2" style="width:100px;height:150px;">
+            <img src={{flop3}} alt="flop3" style="width:100px;height:150px;">
+            <img src={{turn}} alt="turn" style="width:100px;height:150px;">
+            <img src={{river}} alt="river" style="width:100px;height:150px;">
+            Pot: {{pot}}
+            <br><br>
 
-            <form action="/play" method="POST">
-                <input type="submit" value="Fold">
-            </form>
+            <div class='container'>
+              <div class="row">
 
-            <form action="/play" method="POST">
-                <input type="submit" value="Check">
-            </form>
+                <div class="col-md-5">
+                  <h5>Opponent Cards</h5>
+                  <img src={{pocket21}} alt="pocket21" style="width:100px;height:150px;">
+                  <img src={{pocket22}} alt="pocket22" style="width:100px;height:150px;">
+                  Money: {{money2}}
+                </div>
 
-            <form action="/play" method="POST">
-                <input type="submit" value="Call">
-            </form>
+                <div class="col-md-7">
+                  <h5>Your Cards</h5>
+                  <img src={{pocket11}} alt="pocket11" style="width:100px;height:150px;">
+                  <img src={{pocket12}} alt="pocket12" style="width:100px;height:150px;">
+                  Money: {{money1}}
+                  <br>
 
-            <form action="/play" method="POST">
-                Amount:<br>
-                <input type="text" name="raise_amt">
-                <input type="submit" value="Raise">
-            </form>
+                  <form action="/play" method="POST">
+                      <input type="submit" value="Fold">
+                  </form>
+
+                  <form action="/play" method="POST">
+                      <input type="submit" value="Check">
+                  </form>
+
+                  <form action="/play" method="POST">
+                      <input type="submit" value="Call">
+                  </form>
+
+                  <form action="/play" method="POST">
+                      Amount:<br>
+                      <input type="text" name="raise_amt">
+                      <input type="submit" value="Raise">
+                  </form>
+                </div>
+
+              </div>
+            </div>
         </div>
 
         <footer class="footer">
