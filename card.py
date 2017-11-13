@@ -3,8 +3,8 @@ from random import*
 class Card():
     """ Rudimentary card class to track suit and value """
     def __init__(self, value, suit):
-        self.suit = suit
         self.value = value
+        self.suit = suit
     def __repr__(self):
         """ Returns the value and suit of a card"""
         return str(self.value)+str(self.suit)
@@ -34,9 +34,6 @@ class Deck():
         """Shows all of the cards in the deck"""
         for card in self.cards:
             print(card.__repr__())
-    #def shuffle_deck(self):
-        """Shuffles the deck"""
-    #   random.shuffle(self.cards)
 
     def deal(self):
         """Returns the top card from the deck"""
@@ -51,22 +48,6 @@ class Hand():
         """shows cards in the hand"""
         for card in self.cards:
             print(card.__repr__())
-    def remove_card(self, suit , value):
-        """Removes a spesific card from the hand"""
-        for card in self.cards:
-            print (card.value)
-            print (value)
-            print (card.suit)
-            print (suit)
-            if card.value == value and card.suit == suit:
-                print("card removed")
-                return self.cards.remove(card)
-        print("error card not found")
-    def order(self):
-        """Orders the cards in the hand"""
-        self.cards.sort(key=lambda x: x.value, reverse=False)
-        self.showcards()
-
 
     def isflush(self, cardvalues):
         suits = []
