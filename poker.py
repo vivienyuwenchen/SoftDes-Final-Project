@@ -267,18 +267,16 @@ class Hand(Cardset):
         return h
 
 class Deck(CardSet):
-    def __init__(self):   
+    def __init__(self):
         Suits = ["C", "D", "S", "H"]
         Values = ["2","3","4","5","6","7","8","9","T","J","Q", "K", "A"]
-        
+
         self.cards = []
         for s in Suits:
             for v in Values:
                 self.add(v,s)
-    def shuffle_deck(self):
-        """Shuffles the deck"""
-        # TODO: implement this
-        pass
+        shuffle(self.cards)
+
     def deal(self):
         """Returns the top card from the deck"""
         return self.cards.pop()
@@ -308,9 +306,9 @@ class Player():
 class Game():
     def __init__(self):
         self.round_name = ['preflop', 'flop', 'turn', 'river', 'showdown']
-        self.communitycards = Cardset()
+        self.community_cards = Cardset()
         self.deck = Deck()
-        self.tablepot = 0
+        self.table_pot = 0
         self.smallblind_ammount = 50
         self.bigblind_ammount = 100
         self.player1 = Player(3000, "one")
@@ -353,7 +351,7 @@ def deal(deck, cardset, quantity):
 """
 Run game and accept inputs. Could split document here.
 """
-# import viewer 
+# import viewer
 
 game = Game()
 # initialize viewer
@@ -411,5 +409,3 @@ def showdown():
     # TODO: implement this
     # return winner
     pass
-
-
