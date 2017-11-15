@@ -35,7 +35,7 @@ class CardSet():
 class Hand(Cardset):
     def __init__(self):
         self.cards = []
-  
+
     def showcards(self):
         """shows cards in the hand"""
         for card in self.cards:
@@ -329,7 +329,7 @@ def comparehands(pocket1, pocket2, communitycards):
     # TODO implement this
     hand1 = Hand(pocket1.cards + communitycards.cards)
     score1 = hand1.score_hand(hand1.playerhands())
-    
+
     hand2 = Hand(pocket2.cards + communitycards.cards)
     score2 = hand2.score_hand(hand2.playerhands())
     if score1 > score2:
@@ -349,10 +349,10 @@ def handstrength(pocket, communitycards):
     pass
 def deal(deck, cardset, quantity):
     """
-    Removes the first 'quantiy' cards from the deck and adds them to the cardset
+    Removes the first 'quantity' cards from the deck and adds them to the cardset
     """
-    # TODO implement this
-    pass
+    for i in range(quantity):
+        cardset.add(deck.deal())
 
 """
 Run game and accept inputs. Could split document here.
@@ -381,32 +381,37 @@ def betting():
     # else repeat
     pass
 def newround():
-    self.table.cards = []
-    self.player1.hand.cards =[]
-    self.player2.hand.cards =[]
-    self.player1.folded = False
-    self.player2.folded = False
+    game.table.cards = []
+    game.player1.hand.cards =[]
+    game.player2.hand.cards =[]
+    game.player1.folded = False
+    game.player2.folded = False
 def preflop():
     # TODO: implement this
     # deal
+    deal(game.deck, game.player1.hand.cards, 2)
+    deal(game.deck, game.player2.hand.cards, 2)
     # bettting
     # advance to next round
     pass
 def flop():
     # TODO: implement this
     # deal
+    deal(game.deck, game.table.cards, 3)
     # bettting
     # advance to next round
     pass
 def turn():
     # TODO: implement this
     # deal
+    deal(game.deck, game.table.cards, 1)
     # bettting
     # advance to next round
     pass
 def river():
     # TODO: implement this
     # deal
+    deal(game.deck, game.table.cards, 1)
     # bettting
     # advance to next round
     pass
