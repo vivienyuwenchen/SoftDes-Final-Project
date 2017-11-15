@@ -332,6 +332,12 @@ def comparehands(pocket1, pocket2, communitycards):
     
     hand2 = Hand(pocket2.cards + communitycards.cards)
     score2 = hand2.score_hand(hand2.playerhands())
+    if score1 > score2:
+        return "WIN"
+    if score1 < score2:
+        return "LOSS"
+    else:
+        return "DRAW"
 
     pass
 
