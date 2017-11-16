@@ -8,8 +8,8 @@ while True:
         poker.add_deck()
 
     poker.pocket()
-
-
+   
+    
     if poker.player1.folded == False and poker.player2.folded == False:
         print("in flop")
         poker.__repr__()
