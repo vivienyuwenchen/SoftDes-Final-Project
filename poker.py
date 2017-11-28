@@ -3,7 +3,7 @@ Create objects to handle modeling the game.
 """
 # import bot
 # import hand strength calculator
-from random import*
+import random
 
 
 
@@ -32,9 +32,9 @@ class CardSet():
                 print("card removed")
                 return self.cards.remove(card)
         print("error card not found")
-class Hand(Cardset):
-    def __init__(self):
-        self.cards = []
+class Hand(CardSet):
+    def __init__(self, cards):
+        self.cards = cards
 
     def showcards(self):
         """shows cards in the hand"""
@@ -191,9 +191,8 @@ class Hand(Cardset):
         #run dictionary
         new_list = []
         for c in cardvalues:
-            print(c)
             c = str(c)
-            new_card = str(value_map[c[:1]])+str(c[-1:])
+            new_card = str(value_map[c[2:3]]) + str(c[-3:-2])
             new_list.append(new_card)
 
         #check for straight flush
@@ -274,14 +273,14 @@ class Deck(CardSet):
         self.cards = []
         for s in Suits:
             for v in Values:
-                self.add(v,s)
-        shuffle(self.cards)
+                self.add((v,s))
+        random.shuffle(self.cards)
 
     def deal(self):
         """Returns the top card from the deck"""
         return self.cards.pop()
 class Player():
-    def __init__(self,funds, name, is_bot = False):
+    def __init__(self,funds, name, is_bot):
         self.pocket = CardSet()
         self.funds = funds
         self.isturn = False
@@ -289,12 +288,8 @@ class Player():
         self.wager = 0
         self.name = name
         self.is_bot = is_bot
+        self.blind_type = 'small'
 
-        blind = random.randint(1,2)
-        if blind == 1:
-            self.blind_type = "small"
-        else:
-            self.blind_type = "big"
     def check(self):
         self.isturn = False
         pass
@@ -303,34 +298,32 @@ class Player():
         pass
     def bet (self, bet):
         self.wager += bet
-        self.table_pot += bet
         self.funds -= bet
         self.isturn = False
         pass
     def call(self, wager2):
         """player matches other player's bet"""
         bet = wager2-self.wager
-        self.table_pot += bet
         self.funds -= bet
         self.wager = wager2
         self.isturn = False
 
 class Game():
-    def __init__(self):
-        self.community_cards = Cardset()
+    def __init__(self, is_bot1, is_bot2):
+        self.community_cards = CardSet()
         self.deck = Deck()
         self.smallblind_amount = 50
         self.bigblind_amount = 100
-        self.player1 = Player(3000, "one")
-        self.player2 = Player(3000, "two")
+        self.player1 = Player(3000, "one", is_bot1)
+        self.player2 = Player(3000, "two", is_bot2)
 
-        self.table_pot = smallblind_amount + bigblind_amount
-        if self.player1.blind_type == 'small':
-            self.player1.funds -= self.smallblind_amount
-            self.player2.funds -= self.bigblind_amount
-        else:
-            self.player1.funds -= self.bigblind_amount
-            self.player2.funds -= self.smallblind_amount
+        self.table_pot = self.smallblind_amount + self.bigblind_amount
+
+        self.player1.blind_type == 'small'
+        self.player1.funds -= self.smallblind_amount
+        self.player2.funds -= self.bigblind_amount
+        self.player1.wager += self.smallblind_amount
+        self.player2.wager += self.bigblind_amount
 
     def __repr__(self):
         print("Table Cards: " + str(self.community_cards))
@@ -340,16 +333,19 @@ class Game():
         print("Player 2 Pocket: " + str(self.player2.hand.cards))
         print("Player2 Chips: " + str(self.player2.pot.value))
 
+    def update_tablepot(self):
+        self.table_pot = self.player1.wager + self.player2.wager
+
 def compare_hands(pocket1, pocket2, community_cards):
     """
     Takes two pockets plus community cards and returns WIN, LOSS, or DRAW with respect to the first hand
     """
-    # TODO implement this
-    hand1 = Hand(pocket1.cards + community_cards.cards)
-    score1 = hand1.score_hand(hand1.playerhands())
+    cards1 = pocket1
+    hand1 = Hand(pocket1 + community_cards)
+    score1 = hand1.score_hand(hand1.player_hands())
 
-    hand2 = Hand(pocket2.cards + community_cards.cards)
-    score2 = hand2.score_hand(hand2.playerhands())
+    hand2 = Hand(pocket2 + community_cards)
+    score2 = hand2.score_hand(hand2.player_hands())
     if score1 > score2:
         return "Player1"
     if score1 < score2:
@@ -357,7 +353,6 @@ def compare_hands(pocket1, pocket2, community_cards):
     else:
         return "Draw"
 
-    pass
 
 def hand_strength(pocket, community_cards):
     """
@@ -370,4 +365,4 @@ def deal(deck, cardset, quantity):
     Removes the first 'quantity' cards from the deck and adds them to the cardset
     """
     for i in range(quantity):
-        cardset.add(deck.deal())
+        cardset.append(deck.deal())

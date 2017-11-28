@@ -2,8 +2,9 @@
 Run game and accept inputs. Could split document here.
 """
 # import viewer
+from poker import *
 
-game = Game()
+game = Game(False, False)
 # initialize viewer
 # viwer takes as input game and displays table
 
@@ -11,30 +12,35 @@ def get_input(player, other):
     """
     Get user or bot input.
     """
+    money = 100                                                                 # change this to be user input
+
     if player.is_bot:                                                           # TODO: implement bot
         pass
+
     else:
         """ gets the move from the player"""
         move = input(player.name + ": check, call, raise, or fold?>>>")
 
     if move == "fold":
-        player.fold
+        player.fold()
 
     elif move == "raise": #player bets and abount
         player.call(other.wager)
-        money = 100                                                             # change this to be user input
         player.bet(money)
 
     elif move == "check":
         if player.wager != other.wager:
-            raise Exception("You can't check. You haven't bet enough.")
+            print("You can't check. You haven't bet enough.")
+            get_input(player, other)
         player.check()
 
     elif move == "call":
         if other.wager < player.wager:
-            raise Exception("You can't call when you're ahead on betting!")
-        if player.pot - money < 0:
-            raise Exception("You don't have enough money. Sorry.")
+            print("You can't call when you're ahead on betting!")
+            get_input(player, other)
+        if player.funds - money < 0:
+            print("You don't have enough money. Sorry.")
+            get_input(player, other)
         player.call(other.wager)
 
     else:
@@ -46,29 +52,44 @@ def get_input(player, other):
 def betting():
     """Players bet against each other"""
     game.player1.wager = get_input(game.player1, game.player2)
-    game.player2.wager = get_input(game.player2, game.player1)
-    if game.player1.wager == player2.wager:
-        return True
-    elif game.player1.folded or game.player2.folded:
+    print("Player 1:", game.player1.wager)
+    print("Player 2:", game.player2.wager)
+    if game.player1.folded:
+        print("player1 folded")
         return False
+    game.player2.wager = get_input(game.player2, game.player1)
+    print("Player 1:", game.player1.wager)
+    print("Player 2:", game.player2.wager)
+    if game.player2.folded:
+        print("player2 folded")
+        return False
+
+    if game.player1.wager == game.player2.wager:
+        print("moving on")
+        return True
     else:
-        betting()
+        print("you're stuck in betting")
+        return betting()
 
 def newround():
-    game.table.cards = []
-    game.player1.hand.cards =[]
-    game.player2.hand.cards =[]
+    game.community_cards = []
+    game.player1.pocket =[]
+    game.player2.pocket =[]
     game.player1.folded = False
     game.player2.folded = False
     preflop()
 
 def preflop():
     # deal
-    deal(game.deck, game.player1.hand.cards, 2)
-    deal(game.deck, game.player2.hand.cards, 2)
+    deal(game.deck, game.player1.pocket, 2)
+    deal(game.deck, game.player2.pocket, 2)
+    print(game.player1.blind_type)
+    print("Player 1:", game.player1.pocket)
+    print("Player 2:", game.player2.pocket)
     # betting
     if betting():
     # advance to next round
+        game.update_tablepot()
         flop()
     else:
         showdown()
@@ -76,9 +97,13 @@ def preflop():
 def flop():
     # deal
     deal(game.deck, game.community_cards, 3)
+    print("Player 1:", game.player1.pocket)
+    print("Player 2:", game.player2.pocket)
+    print("Community Cards:", game.community_cards)
     # betting
     if betting():
         # advance to next round
+        game.update_tablepot()
         turn()
     else:
         showdown()
@@ -86,9 +111,13 @@ def flop():
 def turn():
     # deal
     deal(game.deck, game.community_cards, 1)
+    print("Player 1:", game.player1.pocket)
+    print("Player 2:", game.player2.pocket)
+    print("Community Cards:", game.community_cards)
     # betting
     if betting():
         # advance to next round
+        game.update_tablepot()
         river()
     else:
         showdown()
@@ -96,13 +125,20 @@ def turn():
 def river():
     # deal
     deal(game.deck, game.community_cards, 1)
+    print("Player 1:", game.player1.pocket)
+    print("Player 2:", game.player2.pocket)
+    print("Community Cards:", game.community_cards)
     # betting
     betting()
+    game.update_tablepot()
     showdown()
 
 def showdown():
     """Finds Winner Gives Money"""
     # return winner
+    print("Player 1:", game.player1.pocket)
+    print("Player 2:", game.player2.pocket)
+    print("Community Cards:", game.community_cards)
     if game.player1.folded:
         game.player2.funds += game.table_pot
     elif game.player2.folded:
@@ -111,8 +147,10 @@ def showdown():
         winner = compare_hands(game.player1.pocket, game.player2.pocket, game.community_cards)
         if winner == "Player1":
             game.player1.funds += game.table_pot
-        elif winner = "Player2":
+        elif winner == "Player2":
             game.player2.funds += game.table_pot
         else:
             game.player1.funds += game.table_pot/2
             game.player2.funds += game.table_pot/2
+
+newround()
