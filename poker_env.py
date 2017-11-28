@@ -3,6 +3,7 @@
 import gym
 from gym import spaces
 from gym.utils import seeding
+import control
 
 class PokerEnv(gym.Env):
     """Simple poker environment
@@ -63,6 +64,6 @@ class PokerEnv(gym.Env):
         return (hs, table_pot, wager, funds, wager2, funds2)
 
     def _reset(self):
-        game = Game()
+        newround()
 
         return self._get_obs()

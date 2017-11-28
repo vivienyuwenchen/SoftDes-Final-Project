@@ -176,7 +176,7 @@ class Hand(Cardset):
         return sorted_values[0]
 
 
-    def playerhands(self):
+    def player_hands(self):
         """Counts the number of each card in the hand
         puts results in a dict. """
         cardvalues = self.cards
@@ -289,59 +289,77 @@ class Player():
         self.wager = 0
         self.name = name
         self.is_bot = is_bot
+
+        blind = random.randint(1,2)
+        if blind == 1:
+            self.blind_type = "small"
+        else:
+            self.blind_type = "big"
     def check(self):
         self.isturn = False
         pass
     def fold(self):
         self.folded = True
         pass
-    def bet (self, bet, wager):
-        self.wager = bet + wager
+    def bet (self, bet):
+        self.wager += bet
+        self.table_pot += bet
+        self.funds -= bet
         self.isturn = False
         pass
-    def call(self, wager):
+    def call(self, wager2):
         """player matches other player's bet"""
-        self.wager = wager
+        bet = wager2-self.wager
+        self.table_pot += bet
+        self.funds -= bet
+        self.wager = wager2
         self.isturn = False
+
 class Game():
     def __init__(self):
-        self.round_name = ['preflop', 'flop', 'turn', 'river', 'showdown']
         self.community_cards = Cardset()
         self.deck = Deck()
-        self.table_pot = 0
-        self.smallblind_ammount = 50
-        self.bigblind_ammount = 100
+        self.smallblind_amount = 50
+        self.bigblind_amount = 100
         self.player1 = Player(3000, "one")
         self.player2 = Player(3000, "two")
-        self.round = 0
+
+        self.table_pot = smallblind_amount + bigblind_amount
+        if self.player1.blind_type == 'small':
+            self.player1.funds -= self.smallblind_amount
+            self.player2.funds -= self.bigblind_amount
+        else:
+            self.player1.funds -= self.bigblind_amount
+            self.player2.funds -= self.smallblind_amount
+
     def __repr__(self):
-        print("Table Cards: " + str(self.communitycards))
-        print("table Pot: " + str(self.tablepot.value))
+        print("Table Cards: " + str(self.community_cards))
+        print("Table Pot: " + str(self.table_pot.value))
         print("Player 1 Pocket: " + str(self.player1.hand.cards))
         print("Player1 Chips: " + str(self.player1.pot.value))
         print("Player 2 Pocket: " + str(self.player2.hand.cards))
         print("Player2 Chips: " + str(self.player2.pot.value))
 
-def comparehands(pocket1, pocket2, communitycards):
+def compare_hands(pocket1, pocket2, community_cards):
     """
     Takes two pockets plus community cards and returns WIN, LOSS, or DRAW with respect to the first hand
     """
     # TODO implement this
-    hand1 = Hand(pocket1.cards + communitycards.cards)
+    hand1 = Hand(pocket1.cards + community_cards.cards)
     score1 = hand1.score_hand(hand1.playerhands())
 
-    hand2 = Hand(pocket2.cards + communitycards.cards)
+    hand2 = Hand(pocket2.cards + community_cards.cards)
     score2 = hand2.score_hand(hand2.playerhands())
     if score1 > score2:
-        return "WIN"
+        return "Player1"
     if score1 < score2:
-        return "LOSS"
+        return "Player2"
     else:
-        return "DRAW"
+        return "Draw"
 
     pass
 
-def handstrength(pocket, communitycards):
+def hand_strength(pocket, community_cards):
     """
     Takes a pocket and the community cards and returns the probability of winning the hand [0:1]
     """
