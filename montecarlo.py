@@ -36,6 +36,10 @@ def dump_cache(text, file_name):
     file_ = open(file_name, 'wb')
     dump(text, file_)
 
+# Load and dump functions
+# Q = load_cache('sa_cache.txt')
+# dump_cache(Q, 'sa_cache.txt')
+
 def make_epsilon_greedy_policy(Q, epsilon, nA):
     """
     Args:
