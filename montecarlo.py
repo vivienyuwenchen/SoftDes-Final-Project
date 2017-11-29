@@ -5,12 +5,36 @@ import matplotlib
 import numpy as np
 import sys
 from pprint import pprint
+from pickle import dump, load
 
 from collections import defaultdict
 from poker_env import PokerEnv
 import poker
 
 env = PokerEnv()
+
+def load_cache(file_name):
+    """
+    Args:
+        file_name: name of file to read from
+
+    Returns:
+        text from file
+    """
+    file_ = open(file_name, 'rb+')
+    return load(file_)
+
+def dump_cache(text, file_name):
+    """
+    Args:
+        text: text, i.e. state-action dictionary, that you want to dump into cache
+        file_name: name of file to write to
+
+    Returns:
+        None
+    """
+    file_ = open(file_name, 'wb')
+    dump(text, file_)
 
 def make_epsilon_greedy_policy(Q, epsilon, nA):
     """
