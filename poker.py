@@ -310,12 +310,14 @@ class Player():
 
 class Game():
     def __init__(self, is_bot1, is_bot2):
+        self.round = 0
         self.community_cards = CardSet()
         self.deck = Deck()
         self.smallblind_amount = 50
         self.bigblind_amount = 100
-        self.player1 = Player(3000, "one", is_bot1)
-        self.player2 = Player(3000, "two", is_bot2)
+        self.player1 = Player(3000, "Player1", is_bot1)
+        self.player2 = Player(3000, "Player2", is_bot2)
+        self.winner = ''
 
         self.table_pot = self.smallblind_amount + self.bigblind_amount
 

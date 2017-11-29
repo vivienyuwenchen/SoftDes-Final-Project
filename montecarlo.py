@@ -1,23 +1,15 @@
-# https://github.com/dennybritz/reinforcement-learning/tree/master/MC
-
-import gym
 import matplotlib
 import numpy as np
 import sys
 from pprint import pprint
-from pickle import dump, load
 
 from collections import defaultdict
-from poker_env import PokerEnv
 import poker
-
-env = PokerEnv()
 
 def load_cache(file_name):
     """
     Args:
         file_name: name of file to read from
-
     Returns:
         text from file
     """
@@ -29,16 +21,11 @@ def dump_cache(text, file_name):
     Args:
         text: text, i.e. state-action dictionary, that you want to dump into cache
         file_name: name of file to write to
-
     Returns:
         None
     """
     file_ = open(file_name, 'wb')
     dump(text, file_)
-
-# Load and dump functions
-# Q = load_cache('sa_cache.txt')
-# dump_cache(Q, 'sa_cache.txt')
 
 def make_epsilon_greedy_policy(Q, epsilon, nA):
     """
@@ -58,35 +45,29 @@ def make_epsilon_greedy_policy(Q, epsilon, nA):
         return A                                                                # return probabilities of all actions
     return policy_fn                                                    # return function that given state, returns action probs
 
-def mc_control_epsilon_greedy(pocket, discount_factor=1.0, epsilon=0.1):
+def mc_control_epsilon_greedy(episode, game, player, discount_factor=1.0, epsilon=0.1):
     """
     Monte Carlo Control using Epsilon-Greedy policies. Finds an optimal epsilon-greedy policy.
 
     Args:
-        env: OpenAI gym environment
-        num_episodes: number of episodes to sample
+        episode: list of (state, action, rewards) for entire game
+        game: all information about current game in game class
+        player: bot player class
         discount_factor: Lambda discount factor ???
         epsilon: Chance the sample a random action (float between 0 and 1)
 
     Returns:
-        A tuple (Q, policy) where...
-            Q is a dictionary mapping state -> action values
-            Policy is a function that takes an observation as an argument and returns action probabilities
+        Action recommendation from bot
     """
+    pocket = player.pocket
 
-    # Instatiate tracker of sum and count of returns for each state to calculate an average
-    returns_sum = defaultdict(float)
-    returns_count = defaultdict(float)
-
-    # The action-value function -- a nested dictionary that maps state -> (action -> action-value).
-    Q = defaultdict(lambda: np.zeros(env.action_space.n))
+    Q = load_cache('sa_cache.txt')
 
     # The policy
-    policy = make_epsilon_greedy_policy(Q, epsilon, env.action_space.n)
+    policy = make_epsilon_greedy_policy(Q, epsilon, 4) # (Q, E, nA)
 
-    # Generate an episode.
+    # Populate episode for current game
     # An episode is an array of (state, action, reward) tuples
-    episode = []
     move = ''
     state = hand_strength(pocket[0], pocket[1])
 
@@ -101,12 +82,20 @@ def mc_control_epsilon_greedy(pocket, discount_factor=1.0, epsilon=0.1):
         move = "check"
     else:
         move = "call"
-    return move
 
-    episode.append((state, action, reward))
-    # if done:
-    #     break
-    state = next_state
+    reward = 0
+    episode.append([state, action, reward])
+
+    if game.round == 5:                                                         # only reward during showdown
+        if game.winner == "TIE":                                                # reward pot amount if win or tie
+            reward = game.table_pot/2
+        elif game.winner == player.name:
+            reward = game.table_pot
+        else:                                                                   # negative reward (money lost) for loss
+            reward = -game.player.wager
+
+    for inc in episode:                                                         # backpropogate reward for all moves made in game (TODO: make incremental + probabalistic)
+        inc[2] = reward
 
     # Find all (state, action) pairs we've visited in this episode
     # We convert each state to a tuple so that we can use it as a dict key
@@ -125,8 +114,6 @@ def mc_control_epsilon_greedy(pocket, discount_factor=1.0, epsilon=0.1):
         Q[state][action] = returns_sum[sa_pair] / returns_count[sa_pair]
         #print("For state ", state, "and action ", action, "reward is: ", Q[state][action])
 
-    return Q, policy
+    dump_cache(Q, 'sa_cache.txt')
 
-Q, policy = mc_control_epsilon_greedy(env, num_episodes=5000, epsilon=0.1)
-
-pprint( dict(Q) )
+    return move

@@ -6,6 +6,10 @@ from poker import *
 from montecarlo import *
 
 game = Game(False, False)
+
+# create new episode for training with every new game
+episode = []
+
 # initialize viewer
 # viwer takes as input game and displays table
 
@@ -15,9 +19,9 @@ def get_input(player, other):
     """
     money = 100                                                                 # change this to be user input
 
-    if player.is_bot:                                                           # TODO: implement bot
-        move = mc_control_epsilon_greedy(player.pocket)
-        pass
+    if player.is_bot:
+        """gets move from bot and updates trainer"""
+        move = mc_control_epsilon_greedy(episode, game, player)
 
     else:
         """ gets the move from the player"""
@@ -88,9 +92,11 @@ def preflop():
     print(game.player1.blind_type)
     print("Player 1:", game.player1.pocket)
     print("Player 2:", game.player2.pocket)
+
     # betting
     if betting():
     # advance to next round
+        game.round = 2
         game.update_tablepot()
         flop()
     else:
@@ -102,9 +108,11 @@ def flop():
     print("Player 1:", game.player1.pocket)
     print("Player 2:", game.player2.pocket)
     print("Community Cards:", game.community_cards)
+
     # betting
     if betting():
         # advance to next round
+        game.round = 3
         game.update_tablepot()
         turn()
     else:
@@ -116,9 +124,11 @@ def turn():
     print("Player 1:", game.player1.pocket)
     print("Player 2:", game.player2.pocket)
     print("Community Cards:", game.community_cards)
+
     # betting
     if betting():
         # advance to next round
+        game.round = 4
         game.update_tablepot()
         river()
     else:
@@ -130,9 +140,11 @@ def river():
     print("Player 1:", game.player1.pocket)
     print("Player 2:", game.player2.pocket)
     print("Community Cards:", game.community_cards)
+
     # betting
     betting()
     game.update_tablepot()
+    game.round = 5
     showdown()
 
 def showdown():
@@ -142,16 +154,21 @@ def showdown():
     print("Player 2:", game.player2.pocket)
     print("Community Cards:", game.community_cards)
     if game.player1.folded:
+        game.winner = "Player2"
         game.player2.funds += game.table_pot
     elif game.player2.folded:
+        game.winner = "Player1"
         game.player1.funds += game.table_pot
     else:
         winner = compare_hands(game.player1.pocket, game.player2.pocket, game.community_cards)
         if winner == "Player1":
+            game.winner = "Player1"
             game.player1.funds += game.table_pot
         elif winner == "Player2":
+            game.winner = "Player2"
             game.player2.funds += game.table_pot
         else:
+            game.winner = "Tie"
             game.player1.funds += game.table_pot/2
             game.player2.funds += game.table_pot/2
 
