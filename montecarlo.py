@@ -2,9 +2,9 @@ import matplotlib
 import numpy as np
 import sys
 from pprint import pprint
-
+from pickle import dump, load
 from collections import defaultdict
-import poker
+from poker import *
 
 def load_cache(file_name):
     """

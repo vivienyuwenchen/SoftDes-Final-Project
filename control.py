@@ -5,7 +5,7 @@ Run game and accept inputs. Could split document here.
 from poker import *
 from montecarlo import *
 
-game = Game(False, False)
+game = Game(True, False)
 
 # create new episode for training with every new game
 episode = []
