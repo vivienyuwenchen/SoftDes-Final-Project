@@ -3,6 +3,7 @@ Run game and accept inputs. Could split document here.
 """
 # import viewer
 from poker import *
+from montecarlo import *
 
 game = Game(False, False)
 # initialize viewer
@@ -15,6 +16,7 @@ def get_input(player, other):
     money = 100                                                                 # change this to be user input
 
     if player.is_bot:                                                           # TODO: implement bot
+        move = mc_control_epsilon_greedy(player.pocket)
         pass
 
     else:

@@ -354,12 +354,51 @@ def compare_hands(pocket1, pocket2, community_cards):
         return "Draw"
 
 
-def hand_strength(pocket, community_cards):
+def hand_strength(pocket1, pocket2):
     """
     Takes a pocket and the community cards and returns the probability of winning the hand [0:1]
+    Returns the Chen formula hand strength for two cards.
+    card = (str : suit, str : rank)
+    rank : 2,3,4,5,6,7,8,9,10,J,Q,K,A
+    suit : s,h,c,d
     """
-    # TODO implement this
-    pass
+	score = 0
+	value = {'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'10':10,'J':11,'Q':12,'K':13,'A':14}
+
+	#high card
+	if value[pocket1[0]] > value[pocket2[0]]:
+		high_card = pocket1[0]
+	else : high_card = pocket2[0]
+
+	if high_card == 'A' : score = 10
+	elif high_card == 'K' : score = 8
+	elif high_card == 'Q' : score = 7
+	elif high_card == 'J' : score = 6
+	else : score = int(high_card)/2
+
+	#pairs
+	is_pair = False
+	if pocket1[0] == pocket2[0] :
+		score = score * 2
+		is_pair = True
+
+	#suited
+	if pocket1[1] == pocket2[1] : score += 2
+
+	#gap
+	gap = abs(value[pocket1[0]]-value[pocket2[0]])
+	if gap == 1 : score += -1
+	elif gap == 2 : score += -2
+	elif gap == 3 : score += -4
+	elif gap >= 4 : score += -5
+
+	#correction
+	if gap <= 1:
+		if value[pocket1[0]] < value['Q'] and value[pocket2[0]] < value['Q']:
+			score += 1
+
+	#round up and return
+	return -(-score//1)
 def deal(deck, cardset, quantity):
     """
     Removes the first 'quantity' cards from the deck and adds them to the cardset
