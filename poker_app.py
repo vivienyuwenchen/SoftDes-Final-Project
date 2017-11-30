@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_socketio import SocketIO
 import random
-from control import *
 
 app = Flask(__name__, static_url_path='/static')
 socketio = SocketIO(app)
@@ -10,9 +9,8 @@ socketio = SocketIO(app)
 def main():
     return render_template('index.html')
 
-
 @app.route('/play', methods=['GET', 'POST'])
-def game():
+def hand(game):
     # if request.form['name']:
     #     name = request.form['name']
     # else:
@@ -21,25 +19,60 @@ def game():
     #if request.method == 'GET':
     #    if request.form['submit'] == 'Fold':
     #        pocket11_ = 'AS'
-
-    pocket1 = get_pocket1()
-    print('pocket1: ', pocket1)
-    pocket2 = get_pocket2()
-    community_cards = get_community_cards()
+    pocket1 = game.player1.pocket
+    pocket2 = game.player2.pocket
+    community_cards = game.community_cards
 
     back = 'purple_back'
     pocket11 = "/static/images/{}.png".format(pocket1[0])
     pocket12 = "/static/images/{}.png".format(pocket2[1])
     pocket21 = "/static/images/{}.png".format(back)
     pocket22 = "/static/images/{}.png".format(back)
-    flop1 = "/static/images/{}.png".format(community_cards[0])
-    flop2 = "/static/images/{}.png".format(community_cards[1])
-    flop3 = "/static/images/{}.png".format(community_cards[2])
-    turn = "/static/images/{}.png".format(community_cards[3])
-    river = "/static/images/{}.png".format(community_cards[4])
-    money1 = get_funds(player1)
-    money2 = get_funds(player2)
-    pot = get_pot()
+    try:
+        i = 0
+        flop1 = "/static/images/{}.png".format(community_cards[0])
+        i = 1
+        flop2 = "/static/images/{}.png".format(community_cards[1])
+        i = 2
+        flop3 = "/static/images/{}.png".format(community_cards[2])
+        i = 3
+        turn = "/static/images/{}.png".format(community_cards[3])
+        i = 4
+        river = "/static/images/{}.png".format(community_cards[4])
+    except IndexError:
+        if i == 0:
+            flop1 = "/static/images/{}.png".format(back)
+            flop2 = "/static/images/{}.png".format(back)
+            flop3 = "/static/images/{}.png".format(back)
+            turn = "/static/images/{}.png".format(back)
+            river = "/static/images/{}.png".format(back)
+        if i == 1:
+            flop1 = "/static/images/{}.png".format(community_cards[0])
+            flop2 = "/static/images/{}.png".format(back)
+            flop3 = "/static/images/{}.png".format(back)
+            turn = "/static/images/{}.png".format(back)
+            river = "/static/images/{}.png".format(back)
+        if i == 2:
+            flop1 = "/static/images/{}.png".format(community_cards[0])
+            flop2 = "/static/images/{}.png".format(community_cards[1])
+            flop3 = "/static/images/{}.png".format(back)
+            turn = "/static/images/{}.png".format(back)
+            river = "/static/images/{}.png".format(back)
+        if i == 3:
+            flop1 = "/static/images/{}.png".format(community_cards[0])
+            flop2 = "/static/images/{}.png".format(community_cards[1])
+            flop3 = "/static/images/{}.png".format(community_cards[2])
+            turn = "/static/images/{}.png".format(back)
+            river = "/static/images/{}.png".format(back)
+        if i == 4:
+            flop1 = "/static/images/{}.png".format(community_cards[0])
+            flop2 = "/static/images/{}.png".format(community_cards[1])
+            flop3 = "/static/images/{}.png".format(community_cards[2])
+            turn = "/static/images/{}.png".format(community_cards[3])
+            river = "/static/images/{}.png".format(back)
+    money1 = 1000
+    money2 = 1000
+    pot = 150
 
     if request.method == 'POST':
         return render_template('game.html', pocket11=pocket11, pocket12=pocket12,
@@ -54,9 +87,7 @@ def game():
     #return ''.join([random.choice(values), random.choice(suits)])
 
 
-if __name__ == "__main__":
-    game = Game(False, False)
+def run_gui(game):
     # create new episode for training with every new game
     episode = []
     socketio.run(app, debug=True)
-    newround()
