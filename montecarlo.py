@@ -65,7 +65,9 @@ def mc_control_epsilon_greedy(episode, game, player, discount_factor=1.0, epsilo
     cache = load_cache('sa_cache.txt')
     returns_sum = defaultdict(float, cache[0])
     returns_count = defaultdict(float, cache[1])
-    Q = defaultdict(lambda: np.zeros(env.action_space.n), cache[2])
+    Q = defaultdict(lambda: np.zeros(4), cache[2])
+    print(len(Q))
+    print(len(cache[2]))
 
     # The policy
     policy = make_epsilon_greedy_policy(Q, epsilon, 4) # (Q, E, nA)

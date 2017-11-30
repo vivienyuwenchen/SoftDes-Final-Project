@@ -6,7 +6,7 @@ from poker import *
 from montecarlo import *
 from poker_app import *
 
-game = Game(False, False)
+game = Game(True, False)
 
 # create new episode for training with every new game
 episode = []
@@ -37,6 +37,7 @@ def get_input(player, other):
     if player.is_bot:
         """gets move from bot and updates trainer"""
         move = mc_control_epsilon_greedy(episode, game, player)
+        print(player.name,":", move)
 
     else:
         """ gets the move from the player"""
@@ -188,5 +189,8 @@ def showdown():
             game.winner = "Tie"
             game.player1.funds += game.table_pot/2
             game.player2.funds += game.table_pot/2
+
+    print(game.winner)
+    print("game over")
 
 newround()
