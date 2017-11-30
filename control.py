@@ -5,13 +5,27 @@ Run game and accept inputs. Could split document here.
 from poker import *
 from montecarlo import *
 
-game = Game(True, False)
+game = Game(False, False)
 
 # create new episode for training with every new game
 episode = []
 
 # initialize viewer
 # viwer takes as input game and displays table
+def get_pocket1():
+    return game.player1.pocket.cards
+
+def get_pocket2():
+    return game.player2.pocket.cards
+
+def get_community_cards():
+    return game.community_cards.cards
+
+def get_funds(player):
+    return player.funds
+
+def get_pot():
+    return game.table_pot
 
 def get_input(player, other):
     """
@@ -79,16 +93,14 @@ def betting():
 
 def newround():
     game.community_cards = []
-    game.player1.pocket =[]
-    game.player2.pocket =[]
+    # deal
+    deal(game.deck, game.player1.pocket, 2)
+    deal(game.deck, game.player2.pocket, 2)
     game.player1.folded = False
     game.player2.folded = False
     preflop()
 
 def preflop():
-    # deal
-    deal(game.deck, game.player1.pocket, 2)
-    deal(game.deck, game.player2.pocket, 2)
     print(game.player1.blind_type)
     print("Player 1:", game.player1.pocket)
     print("Player 2:", game.player2.pocket)
@@ -172,4 +184,4 @@ def showdown():
             game.player1.funds += game.table_pot/2
             game.player2.funds += game.table_pot/2
 
-newround()
+#newround()
