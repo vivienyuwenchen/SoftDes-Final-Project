@@ -401,6 +401,7 @@ def hand_strength(pocket1, pocket2):
 
     #round up and return
     return -(-score//1)
+
 def deal(deck, cardset, quantity):
     """
     Removes the first 'quantity' cards from the deck and adds them to the cardset
