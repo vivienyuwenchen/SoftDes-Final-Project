@@ -61,7 +61,11 @@ def mc_control_epsilon_greedy(episode, game, player, discount_factor=1.0, epsilo
     """
     pocket = player.pocket
 
-    Q = load_cache('sa_cache.txt')
+    # Load dictionaries from file and convert to default dictionaries
+    cache = load_cache('sa_cache.txt')
+    returns_sum = defaultdict(float, cache[0])
+    returns_count = defaultdict(float, cache[1])
+    Q = defaultdict(lambda: np.zeros(env.action_space.n), cache[2])
 
     # The policy
     policy = make_epsilon_greedy_policy(Q, epsilon, 4) # (Q, E, nA)
@@ -114,6 +118,8 @@ def mc_control_epsilon_greedy(episode, game, player, discount_factor=1.0, epsilo
         Q[state][action] = returns_sum[sa_pair] / returns_count[sa_pair]
         #print("For state ", state, "and action ", action, "reward is: ", Q[state][action])
 
-    dump_cache(Q, 'sa_cache.txt')
+    # Convert default dictionaries to dictionaries and dump into file
+    cache = [dict(returns_sum), dict(returns_count), dict(Q)]
+    dump_cache(cache, 'sa_cache.txt')
 
     return move
