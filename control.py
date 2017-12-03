@@ -72,12 +72,19 @@ def betting():
     game.player1.wager = get_input(game.player1, game.player2)
     print("Player 1:", game.player1.wager)
     print("Player 2:", game.player2.wager)
+
+    game.update_tablepot()
+
     if game.player1.folded:
         print("player1 folded")
         return False
+
     game.player2.wager = get_input(game.player2, game.player1)
     print("Player 1:", game.player1.wager)
     print("Player 2:", game.player2.wager)
+
+    game.update_tablepot()
+
     if game.player2.folded:
         print("player2 folded")
         return False
@@ -112,7 +119,6 @@ def preflop():
     if betting():
     # advance to next round
         game.round = 2
-        game.update_tablepot()
         flop()
     else:
         showdown()
@@ -128,7 +134,6 @@ def flop():
     if betting():
         # advance to next round
         game.round = 3
-        game.update_tablepot()
         turn()
     else:
         showdown()
@@ -144,7 +149,6 @@ def turn():
     if betting():
         # advance to next round
         game.round = 4
-        game.update_tablepot()
         river()
     else:
         showdown()
@@ -158,7 +162,6 @@ def river():
 
     # betting
     betting()
-    game.update_tablepot()
     game.round = 5
     showdown()
 
@@ -187,22 +190,23 @@ def showdown():
             game.player1.funds += game.table_pot/2
             game.player2.funds += game.table_pot/2
 
-    print(game.winner)
-    print("game over")
+    print("Winner:", game.winner)
+    print("Player 1:", game.player1.funds)
+    print("Player2:", game.player2.funds)
+    print("Game Over")
 
 if __name__ == "__main__":
-    # create new episode for training with every new game
-    episode = []
-
     # Game Interface Parameters
     black = (0, 0, 0)                       #  Define background color
     screen_width = 800                      #  Define game screen size
     screen_height = 500                     #  Define game screen size
-    
+
     pygame.init()
     screen = pygame.display.set_mode((screen_width, screen_height))
 
     for i in range(10):
+        # create new episode for training with every new game
+        episode = []
         display_blank()
         game = Game(True, True, screen)
         newround()

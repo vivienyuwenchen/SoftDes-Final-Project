@@ -340,13 +340,12 @@ class Game():
         self.player2 = Player(3000, "Player2", is_bot2)
         self.winner = ''
 
-        self.table_pot = self.smallblind_amount + self.bigblind_amount
-
         self.player1.blind_type == 'small'
         self.player1.funds -= self.smallblind_amount
         self.player2.funds -= self.bigblind_amount
         self.player1.wager += self.smallblind_amount
         self.player2.wager += self.bigblind_amount
+        self.table_pot = self.player1.wager + self.player2.wager
 
     def __repr__(self):
         print("Table Cards: " + str(self.community_cards))
