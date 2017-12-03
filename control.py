@@ -6,7 +6,7 @@ from poker import *
 from montecarlo import *
 from poker_app import *
 
-game = Game(True, False)
+game = Game(True, True)
 
 # create new episode for training with every new game
 episode = []

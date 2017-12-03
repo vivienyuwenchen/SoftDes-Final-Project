@@ -59,7 +59,7 @@ class PokerEnv(gym.Env):
     The player can fold (0) or bet $1 (1)
     """
     def __init__(self):
-        self.action_space = spaces.Discrete(2)
+        self.action_space = spaces.Discrete(4)
         self.observation_space = spaces.Tuple((
             spaces.Discrete(50),
             spaces.Discrete(100)))
@@ -67,7 +67,7 @@ class PokerEnv(gym.Env):
 
         # Start the first game
         self._reset()
-        self.nA = 2             # number of actions
+        self.nA = 4             # number of actions
 
     def _seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
@@ -90,7 +90,7 @@ class PokerEnv(gym.Env):
     def _reset(self):
         self.dealer = draw_hand(self.np_random)
         self.player = draw_hand(self.np_random)
-        self.table_money = 1 # pretend blind is $1
+        self.table_money = 50 # pretend blind is $1
         self.reward = 0
 
         return self._get_obs()

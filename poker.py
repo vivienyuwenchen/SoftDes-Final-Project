@@ -365,7 +365,7 @@ def hand_strength(pocket1, pocket2):
     suit : s,h,c,d
     """
     score = 0
-    value = {'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'10':10,'J':11,'Q':12,'K':13,'A':14}
+    value = {'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'T':10,'J':11,'Q':12,'K':13,'A':14}
 
 	#high card
     if value[pocket1[0]] > value[pocket2[0]]:
