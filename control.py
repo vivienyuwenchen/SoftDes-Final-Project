@@ -193,4 +193,5 @@ def showdown():
     print(game.winner)
     print("game over")
 
-newround()
+for i in range(10):
+    newround()

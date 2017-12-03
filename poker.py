@@ -376,6 +376,7 @@ def hand_strength(pocket1, pocket2):
     elif high_card == 'K' : score = 8
     elif high_card == 'Q' : score = 7
     elif high_card == 'J' : score = 6
+    elif high_card == 'T' : score = 5
     else : score = int(high_card)/2
 
     #pairs
