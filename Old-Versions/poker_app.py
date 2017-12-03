@@ -11,14 +11,6 @@ def main():
 
 @app.route('/play', methods=['GET', 'POST'])
 def hand(game):
-    # if request.form['name']:
-    #     name = request.form['name']
-    # else:
-    #     name = 'Sara'
-    #pocket11_ = get_card()
-    #if request.method == 'GET':
-    #    if request.form['submit'] == 'Fold':
-    #        pocket11_ = 'AS'
     pocket1 = game.player1.pocket
     pocket2 = game.player2.pocket
     community_cards = game.community_cards

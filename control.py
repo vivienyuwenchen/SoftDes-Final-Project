@@ -4,7 +4,8 @@ Run game and accept inputs. Could split document here.
 # import viewer
 from poker import *
 from montecarlo import *
-from poker_app import *
+from view import *
+#from poker_app import *
 
 # initialize viewer
 # viwer takes as input game and displays table
@@ -99,6 +100,7 @@ def newround():
     game.player2.folded = False
     #run_gui(game)
     #hand(game)
+    display(game)
     preflop()
 
 def preflop():
@@ -192,6 +194,15 @@ if __name__ == "__main__":
     # create new episode for training with every new game
     episode = []
 
+    # Game Interface Parameters
+    black = (0, 0, 0)                       #  Define background color
+    screen_width = 800                      #  Define game screen size
+    screen_height = 500                     #  Define game screen size
+    
+    pygame.init()
+    screen = pygame.display.set_mode((screen_width, screen_height))
+
     for i in range(10):
-        game = Game(True, True)
+        display_blank()
+        game = Game(True, True, screen)
         newround()

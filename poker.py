@@ -4,14 +4,33 @@ Create objects to handle modeling the game.
 # import bot
 # import hand strength calculator
 import random
+import pygame
 
+white = (255, 255, 255)
+green = (0, 255, 0)
 
-
-class Card():
+class Card(pygame.sprite.Sprite):
     """ Rudimentary card class to track suit and value """
-    def __init__(self, value, suit):
+    def __init__(self, value, suit, picture, screen):
+        pygame.sprite.Sprite.__init__(self)
+        self.screen = screen
+        self.image =  pygame.image.load(picture).convert_alpha()
+        self.image.set_colorkey(white)
+        self.image.convert_alpha()
+        self.rect = self.image.get_rect()
+
+        self.x = random.randint(0, self.screen.get_width()-int(self.image.get_width()/2))
+        self.y = self.screen.get_height()+self.image.get_width()
+
+        self.rect.centerx = self.x + (self.image.get_width()/2)
+        self.rect.centery = self.y + (self.image.get_height()/2)
+
         self.suit = suit
         self.value = value
+
+    def draw(self):
+        self.screen.blit(self.image, (self.x, self.y))
+
     def __repr__(self):
         """ Returns the value and suit of a card"""
         return str(self.value)+str(self.suit)
@@ -266,14 +285,16 @@ class Hand(CardSet):
         return h
 
 class Deck(CardSet):
-    def __init__(self):
+    def __init__(self, screen):
         Suits = ["C", "D", "S", "H"]
         Values = ["2","3","4","5","6","7","8","9","T","J","Q", "K", "A"]
 
         self.cards = []
         for s in Suits:
             for v in Values:
-                self.add((v,s))
+                card_string = "./static/images/"+v+s+".png"
+                card = Card(v,s,card_string, screen)
+                self.add(card)
         random.shuffle(self.cards)
 
     def deal(self):
@@ -309,10 +330,10 @@ class Player():
         self.isturn = False
 
 class Game():
-    def __init__(self, is_bot1, is_bot2):
+    def __init__(self, is_bot1, is_bot2, screen):
         self.round = 0
         self.community_cards = CardSet()
-        self.deck = Deck()
+        self.deck = Deck(screen)
         self.smallblind_amount = 50
         self.bigblind_amount = 100
         self.player1 = Player(3000, "Player1", is_bot1)
