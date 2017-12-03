@@ -6,11 +6,6 @@ from poker import *
 from montecarlo import *
 from poker_app import *
 
-game = Game(True, True)
-
-# create new episode for training with every new game
-episode = []
-
 # initialize viewer
 # viwer takes as input game and displays table
 #def get_pocket1():
@@ -193,5 +188,10 @@ def showdown():
     print(game.winner)
     print("game over")
 
-for i in range(10):
-    newround()
+if __name__ == "__main__":
+    # create new episode for training with every new game
+    episode = []
+
+    for i in range(10):
+        game = Game(True, True)
+        newround()
