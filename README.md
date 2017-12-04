@@ -28,14 +28,18 @@ What things you need to install the software and how to install them
 Inorder to run this program you will need to download the following libarabries:matplotlib, numpy, sys, flask and pickle. Onto your lokal machine. This can be done py typng the following messages into your comand line. 
 
 pip install matplotlib
+
 pip install numpy
+
 pip install sys
+
 pip install flask
+
 pip install pickle
 
 ### Installing
 
-Ti incstall the pokerbot siimply clone the github repository and run the file control.py.
+To install the PokerBot siimply clone the github repository and run the file control.py.
 The game will imidiatly start you playing against the bot. 
 
 ## Website
