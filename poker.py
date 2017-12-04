@@ -20,7 +20,7 @@ class Card(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
         self.x = random.randint(0, self.screen.get_width()-int(self.image.get_width()/2))
-        self.y = self.screen.get_height()+self.image.get_width()
+        self.y = random.randint(0, self.screen.get_height()-int(self.image.get_height()/2))
 
         self.rect.centerx = self.x + (self.image.get_width()/2)
         self.rect.centery = self.y + (self.image.get_height()/2)

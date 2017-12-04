@@ -1,30 +1,30 @@
 import random
-import control
+from control import *
 import pygame
+from pygame.locals import *
 
-def display(game):
+def update_display(screen,game):
 
-    pocket1 = game.player1.pocket
-    pocket2 = game.player2.pocket
-    community_cards = game.community_cards
-
+    [pocket1, pocket2, community_cards, money1, money2, table_pot] = get_game_status(game)
+    print(pocket1)
     #create cardback object which renders the same way a card does
     #back = 'purple_back'
 
     #render pocket cards in a way that makes sense
-    pocket1[0].draw()
+    for n in pocket1:
+        n.draw()
 
     #render the community cards, but only if they exist
     #checks length of community cards
     #render appropriately
 
     #display monies
-    money1 = game.player1.funds
-    money2 = game.player2.funds
-    pot = game.table_pot
+    #money1 = game.player1.funds
+    #money2 = game.player2.funds
+    #pot = game.table_pot
 
+    pygame.display.update()   
 
-
-def display_blank():
+def display_blank(screen):
     #displays starting screen, only called once
     pass

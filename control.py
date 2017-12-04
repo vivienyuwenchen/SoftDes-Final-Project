@@ -4,13 +4,18 @@ Run game and accept inputs. Could split document here.
 # import viewer
 from poker import *
 from montecarlo import *
-from view import *
+import view
+import pygame
+
+def get_game_status(game):
+    return [game.player1.pocket, game.player2.pocket, game.community_cards, game.player1.funds, game.player2.funds, game.table_pot]
 
 def get_input(player, other):
     """
     Get user or bot input.
     """
-    money = 100                                                                 # change this to be user input
+    money = 100
+    view.update_display(screen,game)
 
     if player.is_bot:
         """gets move from bot and updates trainer"""
@@ -78,7 +83,7 @@ def betting():
         print("you're stuck in betting")
         return betting()
 
-def newround():
+def newround(game):
     game.community_cards = []
     # deal
     game.player1.pocket = []
@@ -88,80 +93,69 @@ def newround():
     game.player1.folded = False
     game.player2.folded = False
 
-    display(game)
-    preflop()
+    preflop(game)
 
-def preflop():
+def preflop(game):
     print(game.player1.blind_type)
     print("Player 1:", game.player1.pocket)
     print("Player 2:", game.player2.pocket)
-
-    display(game)
 
     # betting
     if betting():
     # advance to next round
         game.round = 2
-        flop()
+        flop(game)
     else:
-        showdown()
+        showdown(game)
 
-def flop():
+def flop(game):
     # deal
     deal(game.deck, game.community_cards, 3)
     print("Player 1:", game.player1.pocket)
     print("Player 2:", game.player2.pocket)
     print("Community Cards:", game.community_cards)
 
-    display(game)
-
     # betting
     if betting():
         # advance to next round
         game.round = 3
-        turn()
+        turn(game)
     else:
-        showdown()
+        showdown(game)
 
-def turn():
+def turn(game):
     # deal
     deal(game.deck, game.community_cards, 1)
     print("Player 1:", game.player1.pocket)
     print("Player 2:", game.player2.pocket)
     print("Community Cards:", game.community_cards)
-
-    display(game)
 
     # betting
     if betting():
         # advance to next round
         game.round = 4
-        river()
+        river(game)
     else:
-        showdown()
+        showdown(game)
 
-def river():
+def river(game):
     # deal
     deal(game.deck, game.community_cards, 1)
     print("Player 1:", game.player1.pocket)
     print("Player 2:", game.player2.pocket)
     print("Community Cards:", game.community_cards)
 
-    display(game)
-
     # betting
     betting()
     game.round = 5
-    showdown()
+    showdown(game)
 
-def showdown():
+def showdown(game):
     """Finds Winner Gives Money"""
     # return winner
     print("Player 1:", game.player1.pocket)
     print("Player 2:", game.player2.pocket)
     print("Community Cards:", game.community_cards)
-
-    display(game)
 
     if game.player1.folded:
         game.winner = "Player2"
@@ -187,8 +181,6 @@ def showdown():
     print("Player2:", game.player2.funds)
     print("Game Over")
 
-    display(game)
-
 if __name__ == "__main__":
     # Game Interface Parameters
     black = (0, 0, 0)                       #  Define background color
@@ -198,9 +190,19 @@ if __name__ == "__main__":
     pygame.init()
     screen = pygame.display.set_mode((screen_width, screen_height))
 
-    for i in range(10):
+    #display_blank(screen)
+    clock = pygame.time.Clock()
+
+    while True:
+        clock.tick(200)
         # create new episode for training with every new game
-        episode = []
-        #display_blank()
+        episode = []            #display_blank()
         game = Game(False, True, screen)
-        newround()
+        newround(game)
+
+        for event in pygame.event.get():                                        # Check for events
+            if event.type == QUIT:                                              # Allow the user to end the game at any time
+                pygame.quit()
+                sys.exit()
+
+        view.update_display(screen,game)
