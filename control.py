@@ -5,24 +5,6 @@ Run game and accept inputs. Could split document here.
 from poker import *
 from montecarlo import *
 from view import *
-#from poker_app import *
-
-# initialize viewer
-# viwer takes as input game and displays table
-#def get_pocket1():
-#    return game.player1.pocket.cards
-
-#def get_pocket2():
-#    return game.player2.pocket.cards
-
-#def get_community_cards():
-#    return game.community_cards.cards
-
-#def get_funds(player):
-#    return player.funds
-
-#def get_pot():
-#    return game.table_pot
 
 def get_input(player, other):
     """
@@ -105,8 +87,7 @@ def newround():
     deal(game.deck, game.player2.pocket, 2)
     game.player1.folded = False
     game.player2.folded = False
-    #run_gui(game)
-    #hand(game)
+
     display(game)
     preflop()
 
@@ -114,6 +95,8 @@ def preflop():
     print(game.player1.blind_type)
     print("Player 1:", game.player1.pocket)
     print("Player 2:", game.player2.pocket)
+
+    display(game)
 
     # betting
     if betting():
@@ -130,6 +113,8 @@ def flop():
     print("Player 2:", game.player2.pocket)
     print("Community Cards:", game.community_cards)
 
+    display(game)
+
     # betting
     if betting():
         # advance to next round
@@ -144,6 +129,8 @@ def turn():
     print("Player 1:", game.player1.pocket)
     print("Player 2:", game.player2.pocket)
     print("Community Cards:", game.community_cards)
+
+    display(game)
 
     # betting
     if betting():
@@ -160,6 +147,8 @@ def river():
     print("Player 2:", game.player2.pocket)
     print("Community Cards:", game.community_cards)
 
+    display(game)
+
     # betting
     betting()
     game.round = 5
@@ -171,6 +160,9 @@ def showdown():
     print("Player 1:", game.player1.pocket)
     print("Player 2:", game.player2.pocket)
     print("Community Cards:", game.community_cards)
+
+    display(game)
+
     if game.player1.folded:
         game.winner = "Player2"
         game.player2.funds += game.table_pot
@@ -195,6 +187,8 @@ def showdown():
     print("Player2:", game.player2.funds)
     print("Game Over")
 
+    display(game)
+
 if __name__ == "__main__":
     # Game Interface Parameters
     black = (0, 0, 0)                       #  Define background color
@@ -207,6 +201,6 @@ if __name__ == "__main__":
     for i in range(10):
         # create new episode for training with every new game
         episode = []
-        display_blank()
-        game = Game(True, True, screen)
+        #display_blank()
+        game = Game(False, True, screen)
         newround()

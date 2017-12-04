@@ -60,6 +60,8 @@ def mc_control_epsilon_greedy(episode, game, player, discount_factor=1.0, epsilo
         Action recommendation from bot
     """
     pocket = player.pocket
+    print(pocket)
+    #print(pocket.cards)
 
     # Load dictionaries from file and convert to default dictionaries
     cache = load_cache('sa_cache.txt')

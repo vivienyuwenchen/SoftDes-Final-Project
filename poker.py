@@ -376,7 +376,7 @@ def compare_hands(pocket1, pocket2, community_cards):
         return "Draw"
 
 
-def hand_strength(pocket1, pocket2):
+def hand_strength(card1, card2):
     """
     Takes a pocket and the community cards and returns the probability of winning the hand [0:1]
     Returns the Chen formula hand strength for two cards.
@@ -386,6 +386,9 @@ def hand_strength(pocket1, pocket2):
     """
     score = 0
     value = {'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'T':10,'J':11,'Q':12,'K':13,'A':14}
+
+    pocket1 = card1.__repr__()
+    pocket2 = card2.__repr__()
 
 	#high card
     if value[pocket1[0]] > value[pocket2[0]]:
