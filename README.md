@@ -38,7 +38,7 @@ pip install pickle
 Ti incstall the pokerbot siimply clone the github repository and run the file control.py.
 The game will imidiatly start you playing against the bot. 
 
-## Websitr
+## Website
 
 More information about the development of PokerBot can be found on our webstite https://hackathon64.wixsite.com/pokerbot
 
