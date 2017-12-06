@@ -352,7 +352,7 @@ class Player():
 
 class Game():
     def __init__(self, is_bot1, is_bot2, screen):
-        self.round = 0
+        self.round = 'newround'
         self.community_cards = CardSet()
         self.deck = Deck(screen)
         self.smallblind_amount = 50

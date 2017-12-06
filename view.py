@@ -1,5 +1,6 @@
 import random
 from control import *
+from model import *
 import pygame
 from pygame.locals import *
 
@@ -16,7 +17,8 @@ def update_display(screen,game,buttons):
     #back = 'purple_back'
 
     #render pocket cards in a way that makes sense
-    for n in pocket1:
+    #pocket1 = pocket1.cards
+    for n in pocket1.cards:
         n.draw()
 
     #render the community cards, but only if they exist

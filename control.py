@@ -1,7 +1,6 @@
 """
 Run game and accept inputs. Could split document here.
 """
-# import viewer
 from poker import *
 from montecarlo import *
 import view
@@ -63,10 +62,6 @@ if __name__ == "__main__":
         if user_in:
             print(user_in)
 
-        #update_game(game, input)
-        """update game is going to the main file of model, which will deal with
-        storing the current state of the game, responding to user input,
-        generating bot input, and updating the game
-        """
+        update_game(game, episode, buttons)
 
         pygame.display.update()
