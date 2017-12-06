@@ -161,30 +161,34 @@ def showdown(game):
     print("Player2:", game.player2.funds)
     print("Game Over")
 
-def get_input(player,buttons):
-    if player.is_bot:
-        """gets move from bot and updates trainer"""
-        act = mc_control_epsilon_greedy(episode, game, player)
+def get_bot_input():
+    """gets move from bot and updates trainer"""
+    act = mc_control_epsilon_greedy(episode, game, player)
+    return act
+
+def get_user_input(buttons):
+    raise_button = buttons[0]
+    check_button = buttons[1]
+    call_button = buttons[2]
+    fold_button = buttons[3]
+
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            pygame.quit()
+            sys.exit()
+        if event.type == MOUSEBUTTONDOWN:
+            if raise_button.rect.collidepoint(event.pos):
+                act = "raise"
+            elif call_button.rect.collidepoint(event.pos):
+                act = "call"
+            if check_button.rect.collidepoint(event.pos):
+                act = "check"
+            if fold_button.rect.collidepoint(event.pos):
+                act = "fold"
+    try:
         return act
-    else:
-        for event in pygame.event.get():                                        # Check for events
-            if event.type == QUIT:                                              # Allow the user to end the game at any time
-                pygame.quit()
-                sys.exit()
-            if event.type == MOUSEBUTTONDOWN:
-                if raise_button.rect.collidepoint(event.pos):
-                    act = "raise"
-                    actions.append(act)
-                elif call_button.rect.collidepoint(event.pos):
-                    act = "call"
-                if check_button.rect.collidepoint(event.pos):
-                    act = "check"
-                if fold_button.rect.collidepoint(event.pos):
-                    act = "fold"
-            try:
-                return act
-            except:
-                pass
+    except:
+        pass
 
 if __name__ == "__main__":
     # Game Interface Parameters
@@ -205,25 +209,15 @@ if __name__ == "__main__":
     fold_button = Button('fold.png', screen, 650, 400)
 
     buttons = [raise_button, check_button, call_button, fold_button]
-
     game = Game(False, True, screen)
-
     episode = []
     while True:
         clock.tick(30)
         screen.fill(black)
-
-        mouse_state = pygame.mouse.get_pressed()
-        x,y = pygame.mouse.get_pos()
-
-        for event in pygame.event.get():                                        # Check for events
-            if event.type == QUIT:                                              # Allow the user to end the game at any time
-                pygame.quit()
-                sys.exit()
-                
-        #button = pygame.Rect(200, 100, 100, 50)
-        #pygame.draw.rect(screen, (0,255,0), button)
-
         view.update_display(screen,game,buttons)
+
+        user_in = get_user_input(buttons)
+        if user_in:
+            print(user_in)
 
         pygame.display.update()

@@ -24,6 +24,11 @@ class Button(pygame.sprite.Sprite):
         self.screen.blit(self.image, (self.x, self.y))
 
 def click_input(buttons):
+    raise_button = buttons[0]
+    check_button = buttons[1]
+    call_button = buttons[2]
+    fold_button = buttons[3]
+
     for event in pygame.event.get():                                        # Check for events
         if event.type == QUIT:                                              # Allow the user to end the game at any time
             pygame.quit()
@@ -38,6 +43,10 @@ def click_input(buttons):
                 act = "check"
             if fold_button.rect.collidepoint(event.pos):
                 act = "fold"
+    try:
+        return act
+    except:
+        pass
 
 if __name__ == "__main__":
     # Game Interface Parameters
@@ -74,7 +83,6 @@ if __name__ == "__main__":
 
         user_in = click_input(buttons)
         if user_in:
-            actions.append(user_in)
             print(user_in)
 
         pygame.display.update()
