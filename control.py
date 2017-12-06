@@ -5,26 +5,37 @@ Run game and accept inputs. Could split document here.
 from poker import *
 from montecarlo import *
 import view
-import pygame
+import pygame,sys,inspect,random
+from pygame.locals import *
 
 def get_game_status(game):
-    return [game.player1.pocket, game.player2.pocket, game.community_cards, game.player1.funds, game.player2.funds, game.table_pot]
+    return [game.player1.pocket.cards, game.player2.pocket.cards, game.community_cards, game.player1.funds, game.player2.funds, game.table_pot]
 
-def get_input(player, other):
+def check_turn(game):
+    if player.isturn:
+        act = get_input(game.player1, buttons)
+        if act:
+            game.player1.move = act
+            game.player1.isturn = False
+            game.player2.isturn = True
+            return act
+    elif other.isturn:
+        act = get_input(game.player2, buttons)
+        if act:
+            game.player2.move = act
+            game.player1.isturn = True
+            game.player2.isturn = False
+            return act
+
+def process_input(game, player, other):
     """
     Get user or bot input.
     """
+
     money = 100
     view.update_display(screen,game)
 
-    if player.is_bot:
-        """gets move from bot and updates trainer"""
-        move = mc_control_epsilon_greedy(episode, game, player)
-        print(player.name,":", move)
-
-    else:
-        """ gets the move from the player"""
-        move = input(player.name + ": check, call, raise, or fold?>>>")
+    move = check_turn(game)
 
     if move == "fold":
         player.fold()
@@ -36,27 +47,27 @@ def get_input(player, other):
     elif move == "check":
         if player.wager != other.wager:
             print("You can't check. You haven't bet enough.")
-            get_input(player, other)
+            process_input(game, player, other)
         player.check()
 
     elif move == "call":
         if other.wager < player.wager:
             print("You can't call when you're ahead on betting!")
-            get_input(player, other)
+            process_input(game, player, other)
         if player.funds - money < 0:
             print("You don't have enough money. Sorry.")
-            get_input(player, other)
+            process_input(game, player, other)
         player.call(other.wager)
 
     else:
         print("Not a valid move - try again")
-        get_input(player, other)
+        process_input(game, player, other)
 
     return player.wager
 
 def betting():
     """Players bet against each other"""
-    game.player1.wager = get_input(game.player1, game.player2)
+    game.player1.wager = process_input(game, game.player1, game.player2)
     print("Player 1:", game.player1.wager)
     print("Player 2:", game.player2.wager)
 
@@ -66,7 +77,7 @@ def betting():
         print("player1 folded")
         return False
 
-    game.player2.wager = get_input(game.player2, game.player1)
+    game.player2.wager = process_input(game, game.player2, game.player1)
     print("Player 1:", game.player1.wager)
     print("Player 2:", game.player2.wager)
 
@@ -93,20 +104,10 @@ def newround(game):
     game.player1.folded = False
     game.player2.folded = False
 
-    preflop(game)
-
 def preflop(game):
     print(game.player1.blind_type)
     print("Player 1:", game.player1.pocket)
     print("Player 2:", game.player2.pocket)
-
-    # betting
-    if betting():
-    # advance to next round
-        game.round = 2
-        flop(game)
-    else:
-        showdown(game)
 
 def flop(game):
     # deal
@@ -115,14 +116,6 @@ def flop(game):
     print("Player 2:", game.player2.pocket)
     print("Community Cards:", game.community_cards)
 
-    # betting
-    if betting():
-        # advance to next round
-        game.round = 3
-        turn(game)
-    else:
-        showdown(game)
-
 def turn(game):
     # deal
     deal(game.deck, game.community_cards, 1)
@@ -130,25 +123,12 @@ def turn(game):
     print("Player 2:", game.player2.pocket)
     print("Community Cards:", game.community_cards)
 
-    # betting
-    if betting():
-        # advance to next round
-        game.round = 4
-        river(game)
-    else:
-        showdown(game)
-
 def river(game):
     # deal
     deal(game.deck, game.community_cards, 1)
     print("Player 1:", game.player1.pocket)
     print("Player 2:", game.player2.pocket)
     print("Community Cards:", game.community_cards)
-
-    # betting
-    betting()
-    game.round = 5
-    showdown(game)
 
 def showdown(game):
     """Finds Winner Gives Money"""
@@ -181,6 +161,31 @@ def showdown(game):
     print("Player2:", game.player2.funds)
     print("Game Over")
 
+def get_input(player,buttons):
+    if player.is_bot:
+        """gets move from bot and updates trainer"""
+        act = mc_control_epsilon_greedy(episode, game, player)
+        return act
+    else:
+        for event in pygame.event.get():                                        # Check for events
+            if event.type == QUIT:                                              # Allow the user to end the game at any time
+                pygame.quit()
+                sys.exit()
+            if event.type == MOUSEBUTTONDOWN:
+                if raise_button.rect.collidepoint(event.pos):
+                    act = "raise"
+                    actions.append(act)
+                elif call_button.rect.collidepoint(event.pos):
+                    act = "call"
+                if check_button.rect.collidepoint(event.pos):
+                    act = "check"
+                if fold_button.rect.collidepoint(event.pos):
+                    act = "fold"
+            try:
+                return act
+            except:
+                pass
+
 if __name__ == "__main__":
     # Game Interface Parameters
     black = (0, 0, 0)                       #  Define background color
@@ -192,17 +197,33 @@ if __name__ == "__main__":
 
     #display_blank(screen)
     clock = pygame.time.Clock()
+    pygame.mouse.set_visible(True)
 
+    raise_button = Button('raise.png', screen, 50, 400)
+    check_button = Button('check.png', screen, 250, 400)
+    call_button = Button('call.png', screen, 450, 400)
+    fold_button = Button('fold.png', screen, 650, 400)
+
+    buttons = [raise_button, check_button, call_button, fold_button]
+
+    game = Game(False, True, screen)
+
+    episode = []
     while True:
-        clock.tick(200)
-        # create new episode for training with every new game
-        episode = []            #display_blank()
-        game = Game(False, True, screen)
-        newround(game)
+        clock.tick(30)
+        screen.fill(black)
+
+        mouse_state = pygame.mouse.get_pressed()
+        x,y = pygame.mouse.get_pos()
 
         for event in pygame.event.get():                                        # Check for events
             if event.type == QUIT:                                              # Allow the user to end the game at any time
                 pygame.quit()
                 sys.exit()
+                
+        #button = pygame.Rect(200, 100, 100, 50)
+        #pygame.draw.rect(screen, (0,255,0), button)
 
-        view.update_display(screen,game)
+        view.update_display(screen,game,buttons)
+
+        pygame.display.update()

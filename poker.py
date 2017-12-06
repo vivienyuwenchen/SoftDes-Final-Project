@@ -9,6 +9,26 @@ import pygame
 white = (255, 255, 255)
 green = (0, 255, 0)
 
+
+class Button(pygame.sprite.Sprite):
+    """ Rudimentary card class to track suit and value """
+    def __init__(self, picture, screen, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.screen = screen
+        self.image =  pygame.image.load(picture).convert_alpha()
+        self.image.set_colorkey(white)
+        self.image.convert_alpha()
+        self.rect = self.image.get_rect()
+
+        self.x = x
+        self.y = y
+
+        self.rect.centerx = self.x + (self.image.get_width()/2)
+        self.rect.centery = self.y + (self.image.get_height()/2)
+
+    def draw(self):
+        self.screen.blit(self.image, (self.x, self.y))
+
 class Card(pygame.sprite.Sprite):
     """ Rudimentary card class to track suit and value """
     def __init__(self, value, suit, picture, screen):
@@ -19,8 +39,8 @@ class Card(pygame.sprite.Sprite):
         self.image.convert_alpha()
         self.rect = self.image.get_rect()
 
-        self.x = random.randint(0, self.screen.get_width()-int(self.image.get_width()/2))
-        self.y = random.randint(0, self.screen.get_height()-int(self.image.get_height()/2))
+        self.x = 100
+        self.y = 100
 
         self.rect.centerx = self.x + (self.image.get_width()/2)
         self.rect.centery = self.y + (self.image.get_height()/2)
@@ -301,15 +321,16 @@ class Deck(CardSet):
         """Returns the top card from the deck"""
         return self.cards.pop()
 class Player():
-    def __init__(self,funds, name, is_bot):
+    def __init__(self,funds, name, is_bot, isturn):
         self.pocket = CardSet()
         self.funds = funds
-        self.isturn = False
+        self.isturn = isturn
         self.folded = False
         self.wager = 0
         self.name = name
         self.is_bot = is_bot
         self.blind_type = 'small'
+        self.move = ''
 
     def check(self):
         self.isturn = False
@@ -336,8 +357,8 @@ class Game():
         self.deck = Deck(screen)
         self.smallblind_amount = 50
         self.bigblind_amount = 100
-        self.player1 = Player(3000, "Player1", is_bot1)
-        self.player2 = Player(3000, "Player2", is_bot2)
+        self.player1 = Player(3000, "Player1", is_bot1, True)
+        self.player2 = Player(3000, "Player2", is_bot2, False)
         self.winner = ''
 
         self.player1.blind_type == 'small'

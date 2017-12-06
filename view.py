@@ -3,10 +3,15 @@ from control import *
 import pygame
 from pygame.locals import *
 
-def update_display(screen,game):
+def update_display(screen,game,buttons):
+
+    buttons[0].draw()
+    buttons[1].draw()
+    buttons[2].draw()
+    buttons[3].draw()
 
     [pocket1, pocket2, community_cards, money1, money2, table_pot] = get_game_status(game)
-    print(pocket1)
+    #print(pocket1)
     #create cardback object which renders the same way a card does
     #back = 'purple_back'
 
@@ -23,7 +28,7 @@ def update_display(screen,game):
     #money2 = game.player2.funds
     #pot = game.table_pot
 
-    pygame.display.update()   
+    #pygame.display.update()
 
 def display_blank(screen):
     #displays starting screen, only called once

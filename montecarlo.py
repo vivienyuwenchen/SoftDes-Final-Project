@@ -59,8 +59,9 @@ def mc_control_epsilon_greedy(episode, game, player, discount_factor=1.0, epsilo
     Returns:
         Action recommendation from bot
     """
-    pocket = player.pocket
+    pocket = player.pocket.cards
     print(pocket)
+    #there was a problem here with returning none, as an eventual heads up
     #print(pocket.cards)
 
     # Load dictionaries from file and convert to default dictionaries
