@@ -8,6 +8,8 @@ from model import *
 import pygame,sys,inspect,random
 from pygame.locals import *
 
+running = False
+
 def get_user_input(buttons):
     raise_button = buttons[0]
     check_button = buttons[1]
@@ -55,7 +57,10 @@ if __name__ == "__main__":
     game = Game(False, True, screen)
     episode = []
     run_status = 'go'
-    while True:
+    #display_balnk
+    #if input, then
+    running = True
+    while running:
         clock.tick(30)
         screen.fill(black)
         view.update_display(screen,game,buttons)
