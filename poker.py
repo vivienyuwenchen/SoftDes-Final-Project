@@ -9,7 +9,6 @@ import pygame
 white = (255, 255, 255)
 green = (0, 255, 0)
 
-
 class Button(pygame.sprite.Sprite):
     """ Rudimentary card class to track suit and value """
     def __init__(self, picture, screen, x, y):
@@ -248,7 +247,7 @@ class Hand(CardSet):
         #run dictionary
         new_list = []
         for c in cardvalues:
-            c = str(c)
+            c = c.__repr__()
             new_card = str(value_map[c[2:3]]) + str(c[-3:-2])
             new_list.append(new_card)
 
