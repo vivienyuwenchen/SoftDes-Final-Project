@@ -37,13 +37,13 @@ def update_display(screen,game,buttons):
     for i in range(0, table_length):
         n = community_cards[i]
         n.x, n.y = community_pairs[i]
-        community_pairs.pop(community_pairs[i])
         n.draw()
 
     table_backs = 5-table_length
+    new_pairs = community_pairs[table_length:]
     for i in range(0, table_backs):
         n = cardBack
-        n.x, n.y = community_pairs[i]
+        n.x, n.y = new_pairs[i]
         n.draw()
 
     #display monies
