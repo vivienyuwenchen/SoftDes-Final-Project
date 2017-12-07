@@ -21,8 +21,11 @@ def process_user_input(game, player, other, buttons):
 
     move =  control.get_user_input(buttons)
     if move:
+        print(move)
+        print(player.wager)
+        print(other.wager)
         if move == "fold":
-            player.fold
+            player.fold()
 
         elif move == "raise": #player bets an amount
             player.call(other.wager)
@@ -31,16 +34,16 @@ def process_user_input(game, player, other, buttons):
         elif move == "check":
             if player.wager != other.wager:
                 print("You can't check. You haven't bet enough.")
-                process_input(game, player, other)
+                process_user_input(game, player, other, buttons)
             player.check()
 
         elif move == "call":
             if other.wager < player.wager:
                 print("You can't call when you're ahead on betting!")
-                process_input(game, player, other)
+                process_user_input(game, player, other, buttons)
             if player.funds - money < 0:
                 print("You don't have enough money. Sorry.")
-                process_input(game, player, other)
+                process_user_input(game, player, other, buttons)
             player.call(other.wager)
         return player.wager
     else:
@@ -81,9 +84,10 @@ def process_bot_input(game, player, other, episode):
 
 def betting(game, episode, buttons):
     """Players bet against each other"""
-    game.player1.wager = process_user_input(game, game.player1, game.player2, buttons)
+    potential_wager = process_user_input(game, game.player1, game.player2, buttons)
 
-    if game.player1.wager:
+    if potential_wager:
+        game.player1.wager = potential_wager
         game.update_tablepot()
 
         if game.player1.folded:
@@ -120,32 +124,42 @@ def preflop(game, episode, buttons):
     check_status = betting(game, episode, buttons)
     return check_status
 
-def flop(game):
+def flop(game, episode, buttons, run_status):
     # deal
-    deal(game.deck, game.community_cards, 3)
-    print("Player 1:", game.player1.pocket)
-    print("Player 2:", game.player2.pocket)
-    print("Community Cards:", game.community_cards)
+    if run_status == 'go':
+        deal(game.deck, game.community_cards, 3)
+        print("Player 1:", game.player1.pocket.cards)
+        print("Player 2:", game.player2.pocket.cards)
+        print("Community Cards:", game.community_cards)
 
-def turn(game):
-    # deal
-    deal(game.deck, game.community_cards, 1)
-    print("Player 1:", game.player1.pocket)
-    print("Player 2:", game.player2.pocket)
-    print("Community Cards:", game.community_cards)
+    check_status = betting(game, episode, buttons)
+    return check_status
 
-def river(game):
-    # deal
-    deal(game.deck, game.community_cards, 1)
-    print("Player 1:", game.player1.pocket)
-    print("Player 2:", game.player2.pocket)
-    print("Community Cards:", game.community_cards)
+def turn(game, episode, buttons, run_status):
+    if run_status == 'go':
+        deal(game.deck, game.community_cards, 1)
+        print("Player 1:", game.player1.pocket.cards)
+        print("Player 2:", game.player2.pocket.cards)
+        print("Community Cards:", game.community_cards)
+
+    check_status = betting(game, episode, buttons)
+    return check_status
+
+def river(game, episode, buttons, run_status):
+    if run_status == 'go':
+        deal(game.deck, game.community_cards, 1)
+        print("Player 1:", game.player1.pocket.cards)
+        print("Player 2:", game.player2.pocket.cards)
+        print("Community Cards:", game.community_cards)
+
+    check_status = betting(game, episode, buttons)
+    return check_status
 
 def showdown(game):
     """Finds Winner Gives Money"""
     # return winner
-    print("Player 1:", game.player1.pocket)
-    print("Player 2:", game.player2.pocket)
+    print("Player 1:", game.player1.pocket.cards)
+    print("Player 2:", game.player2.pocket.cards)
     print("Community Cards:", game.community_cards)
 
     if game.player1.folded:
@@ -155,7 +169,7 @@ def showdown(game):
         game.winner = "Player1"
         game.player1.funds += game.table_pot
     else:
-        winner = compare_hands(game.player1.pocket, game.player2.pocket, game.community_cards)
+        winner = compare_hands(game.player1.pocket.cards, game.player2.pocket.cards, game.community_cards)
         if winner == "Player1":
             game.winner = "Player1"
             game.player1.funds += game.table_pot
@@ -171,8 +185,9 @@ def showdown(game):
     print("Player 1:", game.player1.funds)
     print("Player2:", game.player2.funds)
     print("Game Over")
+    print("New Round")
 
-def update_game(game, episode, buttons):
+def update_game(game, episode, buttons,run_status):
     """
     We know that input is going to be user input
     We need this program to go to the correct stage of the game, depending
@@ -184,36 +199,68 @@ def update_game(game, episode, buttons):
     Folded skips to showdown
     game needs new attribute 'round'
     """
+    #check if run status exists, otherwise instantiate it
+    #fix this jesus this is so broken
+
     game_round = game.round
     if game_round == 'newround':
         newround(game)
+        print(game_round)
         game.round = 'preflop'
-        pass
+        print(game.round)
+        return 'go'
     elif game_round == 'preflop':
         check = preflop(game, episode, buttons)
         if check == True:
             game.round = 'flop'
+            return 'go'
         elif check == False:
             game.round = 'showdown'
+            print(game.round)
+            return 'go'
         elif check == 'no input':
-            game.round = preflop
-        pass
+            game.round = 'preflop'
+            return 'stop'
+        return 'stop'
     elif game_round == 'flop':
-        smthng
-        game.round = 'turn'
+        check = flop(game, episode, buttons, run_status)
+        if check == True:
+            game.round = 'turn'
+            return 'go'
+        elif check == False:
+            game.round = 'showdown'
+            return 'go'
+        elif check == 'no input':
+            game.round = 'flop'
+            return 'stop'
+        return 'stop'
         pass
     elif game_round == 'turn':
-        smthng
-        game.round = 'river'
-        pass
+        check = turn(game, episode, buttons, run_status)
+        if check == True:
+            game.round = 'river'
+            return 'go'
+        elif check == False:
+            game.round = 'showdown'
+            return 'go'
+        elif check == 'no input':
+            game.round = 'turn'
+            return 'stop'
+        return 'stop'
     elif game_round == 'river':
-        smthng
-        game.round = 'showdown'
-        pass
+        check = turn(game, episode, buttons, run_status)
+        if check == True:
+            game.round = 'showdown'
+            return 'go'
+        elif check == False:
+            game.round = 'showdown'
+            return 'go'
+        elif check == 'no input':
+            game.round = 'river'
+            return 'stop'
+        return 'stop'
     elif game_round == 'showdown':
-        smthng
+        showdown(game)
         game.round = 'newround'
-        pass
-
-    print("Something went wrong, dumbass")
+        return 'go'
     pass

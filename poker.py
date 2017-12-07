@@ -39,8 +39,8 @@ class Card(pygame.sprite.Sprite):
         self.image.convert_alpha()
         self.rect = self.image.get_rect()
 
-        self.x = 100
-        self.y = 100
+        self.x = 600
+        self.y = 450
 
         self.rect.centerx = self.x + (self.image.get_width()/2)
         self.rect.centery = self.y + (self.image.get_height()/2)
@@ -364,8 +364,8 @@ class Game():
         self.player1.blind_type == 'small'
         self.player1.funds -= self.smallblind_amount
         self.player2.funds -= self.bigblind_amount
-        self.player1.wager += self.smallblind_amount
-        self.player2.wager += self.bigblind_amount
+        self.player1.wager = self.smallblind_amount
+        self.player2.wager = self.bigblind_amount
         self.table_pot = self.player1.wager + self.player2.wager
 
     def __repr__(self):

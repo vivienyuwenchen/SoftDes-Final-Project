@@ -53,15 +53,11 @@ if __name__ == "__main__":
     buttons = [raise_button, check_button, call_button, fold_button]
     game = Game(False, True, screen)
     episode = []
+    run_status = 'go'
     while True:
         clock.tick(30)
         screen.fill(black)
         view.update_display(screen,game,buttons)
 
-        user_in = get_user_input(buttons)
-        if user_in:
-            print(user_in)
-
-        update_game(game, episode, buttons)
-
+        run_status = update_game(game, episode, buttons,run_status)
         pygame.display.update()
