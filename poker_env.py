@@ -14,15 +14,15 @@ class PokerEnv(gym.Env):
     The player can fold (0) or bet $1 (1)
     """
     def __init__(self):
-        self.nA = 4             # number of actions
-
-        self.action_space = spaces.Discrete(self.nA)
+        self.action_space = spaces.Discrete(3)
         self.observation_space = spaces.Tuple((
             spaces.Discrete(50),
             spaces.Discrete(100)))
         self._seed()
 
-        self._reset()           # Start the first game
+        # Start the first game
+        self._reset()
+        self.nA = 3             # number of actions
 
     def _seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
@@ -30,25 +30,13 @@ class PokerEnv(gym.Env):
 
     def _step(self, action):
         assert self.action_space.contains(action)
-        if game.Player1.isturn:
-            player = game.Player1
-        else:
-            player = game.Player2
-
-        # Implement round progression? Reward given in showdown
-
-        if action == 0:                                                         # check
-            player.check()
-        elif action == 1:                                                       # fold
-            player.fold()
-        elif action == 2:
-            player.bet()                                                        # bet
-        else:
-            player.call()                                                       # call
-
-        # If won, reward = + table_pot
-        # If lost, reward = - wager
-        self.reward = 0
+        if action:                                                                      # bet
+            #self.player.append(draw_card(self.np_random))                              # use this line for placing additional cards on table
+            self.table_money += 100
+            if score(self.player) > score(self.dealer):
+                self.reward = self.table_money
+        else:                                                                           # fold
+            self.reward = -self.table_money
         return self._get_obs(), self.reward, {}
 
     def _get_obs(self):
@@ -64,6 +52,9 @@ class PokerEnv(gym.Env):
         return (hs, table_pot, wager, funds, wager2, funds2)
 
     def _reset(self):
-        newround()
+        self.dealer = draw_hand(self.np_random)
+        self.player = draw_hand(self.np_random)
+        self.table_money = 100 # pretend blind is $1
+        self.reward = 0
 
         return self._get_obs()

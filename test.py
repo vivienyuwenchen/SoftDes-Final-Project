@@ -91,7 +91,7 @@ def mc_control_epsilon_greedy(env, num_episodes, discount_factor=1.0, epsilon=0.
 
 
     # The action-value function -- a nested dictionary that maps state -> (action -> action-value).
-    Q = defaultdict(lambda: np.zeros(4))
+    Q = defaultdict(lambda: np.zeros(3))
 
     # Load dictionaries from file and convert to default dictionaries
     # cache = load_cache('sa_cache.txt')
@@ -145,11 +145,12 @@ def mc_control_epsilon_greedy(env, num_episodes, discount_factor=1.0, epsilon=0.
 
     return Q, policy
 
-Q, policy = mc_control_epsilon_greedy(env, num_episodes=5000, epsilon=0.1)
+# Q, policy = mc_control_epsilon_greedy(env, num_episodes=1, epsilon=0.1)
 
-pprint( dict(Q) )
+# pprint( dict(Q) )
 
-# cache = load_cache('sa_cache.txt')
+cache = load_cache('sa_cache.txt')
+print(cache)
 # returns_sum = defaultdict(float, cache[0])
 # returns_count = defaultdict(float, cache[1])
 # Q = defaultdict(lambda: np.zeros(env.action_space.n), cache[2])
@@ -160,12 +161,12 @@ pprint( dict(Q) )
 # cache = [{(0.0, 0): 0.0}, {(0.0, 0): 1.0}, {0.0: array([ 0.,  0.,  0.,  0.])}]
 # dump_cache(cache, 'sa_cache.txt')
 
-print(returns_sum)
-print(type(returns_sum))
-print(len(cache[0]))
-print(returns_count)
-print(type(returns_count))
-print(len(cache[1]))
-print(Q)
-print(type(Q))
-print(len(cache[2]))
+# print(returns_sum)
+# print(type(returns_sum))
+# print(len(cache[0]))
+# print(returns_count)
+# print(type(returns_count))
+# print(len(cache[1]))
+# print(Q)
+# print(type(Q))
+# print(len(cache[2]))

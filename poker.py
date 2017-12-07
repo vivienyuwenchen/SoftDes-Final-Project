@@ -31,25 +31,25 @@ class Button(pygame.sprite.Sprite):
 
 class Card(pygame.sprite.Sprite):
     """ Rudimentary card class to track suit and value """
-    def __init__(self, value, suit, picture, screen):
-        pygame.sprite.Sprite.__init__(self)
-        self.screen = screen
-        self.image =  pygame.image.load(picture).convert_alpha()
-        self.image.set_colorkey(white)
-        self.image.convert_alpha()
-        self.rect = self.image.get_rect()
+    def __init__(self, value, suit):#, picture, screen):
+        # pygame.sprite.Sprite.__init__(self)
+        # self.screen = screen
+        # self.image =  pygame.image.load(picture).convert_alpha()
+        # self.image.set_colorkey(white)
+        # self.image.convert_alpha()
+        # self.rect = self.image.get_rect()
 
         self.x = 600
         self.y = 450
 
-        self.rect.centerx = self.x + (self.image.get_width()/2)
-        self.rect.centery = self.y + (self.image.get_height()/2)
+        # self.rect.centerx = self.x + (self.image.get_width()/2)
+        # self.rect.centery = self.y + (self.image.get_height()/2)
 
         self.suit = suit
         self.value = value
 
-    def draw(self):
-        self.screen.blit(self.image, (self.x, self.y))
+    # def draw(self):
+    #     self.screen.blit(self.image, (self.x, self.y))
 
     def __repr__(self):
         """ Returns the value and suit of a card"""
@@ -323,16 +323,17 @@ class Hand(CardSet):
         return h
 
 class Deck(CardSet):
-    def __init__(self, screen):
+    def __init__(self):#, screen):
         Suits = ["C", "D", "S", "H"]
         Values = ["2","3","4","5","6","7","8","9","T","J","Q", "K", "A"]
 
         self.cards = []
         for s in Suits:
             for v in Values:
-                card_string = "./static/images/"+v+s+".png"
-                card = Card(v,s,card_string, screen)
-                self.add(card)
+                self.add((v,s))
+                # card_string = "./static/images/"+v+s+".png"
+                # card = Card(v,s,card_string, screen)
+                # self.add(card)
         random.shuffle(self.cards)
 
     def deal(self):
@@ -372,7 +373,7 @@ class Game():
     def __init__(self, is_bot1, is_bot2, screen):
         self.round = 'newround'
         self.community_cards = CardSet()
-        self.deck = Deck(screen)
+        self.deck = Deck()#screen)
         self.smallblind_amount = 50
         self.bigblind_amount = 100
         self.player1 = Player(3000, "Player1", is_bot1, True)
@@ -415,7 +416,7 @@ def compare_hands(pocket1, pocket2, community_cards):
         return "Draw"
 
 
-def hand_strength(card1, card2):
+def hand_strength(pocket1, pocket2):
     """
     Takes a pocket and the community cards and returns the probability of winning the hand [0:1]
     Returns the Chen formula hand strength for two cards.
@@ -425,9 +426,6 @@ def hand_strength(card1, card2):
     """
     score = 0
     value = {'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'T':10,'J':11,'Q':12,'K':13,'A':14}
-
-    pocket1 = card1.__repr__()
-    pocket2 = card2.__repr__()
 
 	#high card
     if value[pocket1[0]] > value[pocket2[0]]:
