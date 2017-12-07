@@ -84,7 +84,7 @@ def mc_control_epsilon_greedy(episode, game, player, discount_factor=1.0, epsilo
         # hard code to fold if out of money to prevent raising cycle
         action = 0
 
-    if game.round != 5:
+    if game.round != 'showdown':
         if action == 0:
             move = "fold"
         elif action == 1:
@@ -95,7 +95,7 @@ def mc_control_epsilon_greedy(episode, game, player, discount_factor=1.0, epsilo
     reward = 0
     episode.append([state, action, reward])
 
-    if game.round == 5:                                                         # only reward during showdown
+    if game.round == 'showdown':                                                         # only reward during showdown
         if game.winner == "TIE":                                                # reward pot amount if win or tie
             reward = game.table_pot/2
         elif game.winner == player.name:

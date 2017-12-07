@@ -31,20 +31,15 @@ def process_user_input(game, player, other, buttons):
             player.call(other.wager)
             player.bet(money)
 
-        elif move == "check":
-            if player.wager != other.wager:
-                print("You can't check. You haven't bet enough.")
-                process_user_input(game, player, other, buttons)
-            player.check()
-
-        elif move == "call":
-            if other.wager < player.wager:
-                print("You can't call when you're ahead on betting!")
-                process_user_input(game, player, other, buttons)
+        elif move == "check" or move == "call" or move == "match":
             if player.funds - money < 0:
-                print("You don't have enough money. Sorry.")
+                print("You don't have enough money. Sorry")
+                process_user_input(game, player, other, buttons)
+            if other.wager < player.wager:
+                print("You can't match when you're ahead on betting!")
                 process_user_input(game, player, other, buttons)
             player.call(other.wager)
+
         return player.wager
     else:
         pass
@@ -61,6 +56,9 @@ def process_bot_input(game, player, other, episode):
             player.fold()
 
         elif move == "raise": #player bets an amount
+            if player.funds - money < 0:
+                print("You don't have enough money. Sorry")
+                process_bot_input(game,player,other,episode)
             player.call(other.wager)
             player.bet(money)
 
@@ -181,6 +179,8 @@ def showdown(game):
             game.player1.funds += game.table_pot/2
             game.player2.funds += game.table_pot/2
 
+    mc_control_epsilon_greedy(episode, game, game.player1)
+    mc_control_epsilon_greedy(episode, game, game.player2)
     print("Winner:", game.winner)
     print("Player 1:", game.player1.funds)
     print("Player2:", game.player2.funds)
