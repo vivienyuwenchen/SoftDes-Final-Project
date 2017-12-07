@@ -11,7 +11,7 @@ def get_bot_input(episode,game,player):
     return act
 
 def get_game_status(game):
-    return [game.player1.pocket, game.player2.pocket, game.community_cards, game.player1.funds, game.player2.funds, game.table_pot]
+    return [game.player1.pocket, game.player2.pocket, game.community_cards.cards, game.player1.funds, game.player2.funds, game.table_pot]
 
 def process_user_input(game, player, other, buttons):
     """
@@ -111,7 +111,7 @@ def betting(game, episode, buttons):
         return 'no input'
 
 def newround(game):
-    game.community_cards = []
+    game.community_cards.cards = []
     # deal
     game.player1.pocket.cards = []
     game.player2.pocket.cards = []
@@ -127,30 +127,30 @@ def preflop(game, episode, buttons):
 def flop(game, episode, buttons, run_status):
     # deal
     if run_status == 'go':
-        deal(game.deck, game.community_cards, 3)
+        deal(game.deck, game.community_cards.cards, 3)
         print("Player 1:", game.player1.pocket.cards)
         print("Player 2:", game.player2.pocket.cards)
-        print("Community Cards:", game.community_cards)
+        print("Community Cards:", game.community_cards.cards)
 
     check_status = betting(game, episode, buttons)
     return check_status
 
 def turn(game, episode, buttons, run_status):
     if run_status == 'go':
-        deal(game.deck, game.community_cards, 1)
+        deal(game.deck, game.community_cards.cards, 1)
         print("Player 1:", game.player1.pocket.cards)
         print("Player 2:", game.player2.pocket.cards)
-        print("Community Cards:", game.community_cards)
+        print("Community Cards:", game.community_cards.cards)
 
     check_status = betting(game, episode, buttons)
     return check_status
 
 def river(game, episode, buttons, run_status):
     if run_status == 'go':
-        deal(game.deck, game.community_cards, 1)
+        deal(game.deck, game.community_cards.cards, 1)
         print("Player 1:", game.player1.pocket.cards)
         print("Player 2:", game.player2.pocket.cards)
-        print("Community Cards:", game.community_cards)
+        print("Community Cards:", game.community_cards.cards)
 
     check_status = betting(game, episode, buttons)
     return check_status
@@ -160,7 +160,7 @@ def showdown(game):
     # return winner
     print("Player 1:", game.player1.pocket.cards)
     print("Player 2:", game.player2.pocket.cards)
-    print("Community Cards:", game.community_cards)
+    print("Community Cards:", game.community_cards.cards)
 
     if game.player1.folded:
         game.winner = "Player2"
@@ -169,7 +169,7 @@ def showdown(game):
         game.winner = "Player1"
         game.player1.funds += game.table_pot
     else:
-        winner = compare_hands(game.player1.pocket.cards, game.player2.pocket.cards, game.community_cards)
+        winner = compare_hands(game.player1.pocket.cards, game.player2.pocket.cards, game.community_cards.cards)
         if winner == "Player1":
             game.winner = "Player1"
             game.player1.funds += game.table_pot

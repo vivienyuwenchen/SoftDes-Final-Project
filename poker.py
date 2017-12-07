@@ -54,6 +54,24 @@ class Card(pygame.sprite.Sprite):
     def __repr__(self):
         """ Returns the value and suit of a card"""
         return str(self.value)+str(self.suit)
+class CardBack(pygame.sprite.Sprite):
+    def __init__(self, picture, screen):
+        pygame.sprite.Sprite.__init__(self)
+        self.screen = screen
+        self.image =  pygame.image.load(picture).convert_alpha()
+        self.image.set_colorkey(white)
+        self.image.convert_alpha()
+        self.rect = self.image.get_rect()
+
+        self.x = 600
+        self.y = 450
+
+        self.rect.centerx = self.x + (self.image.get_width()/2)
+        self.rect.centery = self.y + (self.image.get_height()/2)
+
+    def draw(self):
+        self.screen.blit(self.image, (self.x, self.y))
+
 class CardSet():
     def __init__(self, cards = []):
         self.cards = cards
