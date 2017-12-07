@@ -60,17 +60,15 @@ def mc_control_epsilon_greedy(episode, game, player, discount_factor=1.0, epsilo
         Action recommendation from bot
     """
     pocket = player.pocket
-    print(pocket)
-    #print(pocket.cards)
 
     # Load dictionaries from file and convert to default dictionaries
     cache = load_cache('sa_cache.txt')
     returns_sum = defaultdict(float, cache[0])
     returns_count = defaultdict(float, cache[1])
-    Q = defaultdict(lambda: np.zeros(4), cache[2])
+    Q = defaultdict(lambda: np.zeros(3), cache[2])
 
     # The policy
-    policy = make_epsilon_greedy_policy(Q, epsilon, 4) # (Q, E, nA)
+    policy = make_epsilon_greedy_policy(Q, epsilon, 3) # (Q, E, nA)
 
     # Populate episode for current game
     # An episode is an array of (state, action, reward) tuples
@@ -79,15 +77,17 @@ def mc_control_epsilon_greedy(episode, game, player, discount_factor=1.0, epsilo
 
     probs = policy(state)
     action = np.random.choice(np.arange(len(probs)), p=probs)
+    if player.funds - 100 < 0:
+        # hard code to fold if out of money to prevent raising cycle
+        action = 0
 
-    if action == 0:
-        move = "fold"
-    elif action == 1:
-        move = "raise"
-    elif action == 2:
-        move = "check"
-    else:
-        move = "call"
+    if game.round != 5:
+        if action == 0:
+            move = "fold"
+        elif action == 1:
+            move = "raise"
+        elif action == 2:
+            move = "match"
 
     reward = 0
     episode.append([state, action, reward])

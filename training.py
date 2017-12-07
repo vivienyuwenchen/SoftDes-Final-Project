@@ -4,7 +4,6 @@ Run game and accept inputs. Could split document here.
 # import viewer
 from poker import *
 from montecarlo import *
-from view import *
 
 def get_input(player, other):
     """
@@ -24,24 +23,22 @@ def get_input(player, other):
     if move == "fold":
         player.fold()
 
-    elif move == "raise": #player bets and abount
+    elif move == "raise": #player bets and amount
+        if player.funds - money < 0:
+            print("You don't have enough money. Sorry")
+            get_input(player, other)
         player.call(other.wager)
         player.bet(money)
 
-    elif move == "check":
-        if player.wager != other.wager:
-            print("You can't check. You haven't bet enough.")
-            get_input(player, other)
-        player.check()
-
-    elif move == "call":
-        if other.wager < player.wager:
-            print("You can't call when you're ahead on betting!")
-            get_input(player, other)
+    elif move == "check" or move == "call" or move == "match":
         if player.funds - money < 0:
-            print("You don't have enough money. Sorry.")
+            print("You don't have enough money. Sorry")
+            get_input(player, other)
+        if other.wager < player.wager:
+            print("You can't match when you're ahead on betting!")
             get_input(player, other)
         player.call(other.wager)
+        #player.check()
 
     else:
         print("Not a valid move - try again")
@@ -88,7 +85,6 @@ def newround():
     game.player1.folded = False
     game.player2.folded = False
 
-    display(game)
     preflop()
 
 def preflop():
@@ -96,14 +92,13 @@ def preflop():
     print("Player 1:", game.player1.pocket)
     print("Player 2:", game.player2.pocket)
 
-    display(game)
-
     # betting
     if betting():
     # advance to next round
         game.round = 2
         flop()
     else:
+        game.round = 5
         showdown()
 
 def flop():
@@ -113,14 +108,13 @@ def flop():
     print("Player 2:", game.player2.pocket)
     print("Community Cards:", game.community_cards)
 
-    display(game)
-
     # betting
     if betting():
         # advance to next round
         game.round = 3
         turn()
     else:
+        game.round = 5
         showdown()
 
 def turn():
@@ -130,14 +124,13 @@ def turn():
     print("Player 2:", game.player2.pocket)
     print("Community Cards:", game.community_cards)
 
-    display(game)
-
     # betting
     if betting():
         # advance to next round
         game.round = 4
         river()
     else:
+        game.round = 5
         showdown()
 
 def river():
@@ -146,8 +139,6 @@ def river():
     print("Player 1:", game.player1.pocket)
     print("Player 2:", game.player2.pocket)
     print("Community Cards:", game.community_cards)
-
-    display(game)
 
     # betting
     betting()
@@ -160,8 +151,6 @@ def showdown():
     print("Player 1:", game.player1.pocket)
     print("Player 2:", game.player2.pocket)
     print("Community Cards:", game.community_cards)
-
-    display(game)
 
     if game.player1.folded:
         game.winner = "Player2"
@@ -182,25 +171,16 @@ def showdown():
             game.player1.funds += game.table_pot/2
             game.player2.funds += game.table_pot/2
 
+    mc_control_epsilon_greedy(episode, game, game.player1)
+    mc_control_epsilon_greedy(episode, game, game.player2)
     print("Winner:", game.winner)
     print("Player 1:", game.player1.funds)
     print("Player2:", game.player2.funds)
     print("Game Over")
 
-    display(game)
-
 if __name__ == "__main__":
-    # Game Interface Parameters
-    black = (0, 0, 0)                       #  Define background color
-    screen_width = 800                      #  Define game screen size
-    screen_height = 500                     #  Define game screen size
-
-    pygame.init()
-    screen = pygame.display.set_mode((screen_width, screen_height))
-
     for i in range(10):
         # create new episode for training with every new game
         episode = []
-        #display_blank()
-        game = Game(False, True, screen)
+        game = Game(False, True)
         newround()
