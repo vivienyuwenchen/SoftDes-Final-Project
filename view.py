@@ -1,5 +1,3 @@
-import random
-from control import *
 from model import *
 import pygame
 from pygame.locals import *
@@ -7,10 +5,8 @@ from poker import *
 
 def update_display(screen,game,buttons):
 
-    buttons[0].draw()
-    buttons[1].draw()
-    buttons[2].draw()
-    buttons[3].draw()
+    for n in buttons:
+        n.draw()
 
     cardBack = CardBack('./static/images/purple_back.png', screen)
 
@@ -27,10 +23,6 @@ def update_display(screen,game,buttons):
         n = cardBack
         n.x, n.y = pocket2_pairs[i]
         n.draw()
-
-    #render the community cards, but only if they exist
-    #checks length of community cards
-    #render appropriately
 
     community_pairs = [(40,40), (170,40),(300,40),(430,40),(560,40)]
     table_length = len(community_cards)
@@ -50,9 +42,3 @@ def update_display(screen,game,buttons):
     #money1 = game.player1.funds
     #money2 = game.player2.funds
     #pot = game.table_pot
-
-    #pygame.display.update()
-
-def display_blank(screen):
-    #displays starting screen, only called once
-    pass

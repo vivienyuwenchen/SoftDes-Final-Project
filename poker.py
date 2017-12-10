@@ -1,8 +1,6 @@
 """
 Create objects to handle modeling the game.
 """
-# import bot
-# import hand strength calculator
 import random
 import pygame
 
@@ -98,10 +96,6 @@ class Hand(CardSet):
         """shows cards in the hand"""
         for card in self.cards:
             print(card.__repr__())
-
-"""
-Evaluate Hand
-"""
 
     def isflush(self, cardvalues):
         suits = []
