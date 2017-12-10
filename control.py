@@ -1,39 +1,10 @@
 """
-Run game and accept inputs. Could split document here.
+Run game and accept inputs.
 """
 from poker import *
-from montecarlo import *
 import view
 from model import *
-import pygame,sys,inspect,random
 from pygame.locals import *
-
-running = False
-
-def get_user_input(buttons):
-    raise_button = buttons[0]
-    check_button = buttons[1]
-    call_button = buttons[2]
-    fold_button = buttons[3]
-
-    for event in pygame.event.get():
-        if event.type == QUIT:
-            pygame.quit()
-            sys.exit()
-        if event.type == MOUSEBUTTONDOWN:
-            if raise_button.rect.collidepoint(event.pos):
-                act = "raise"
-            elif call_button.rect.collidepoint(event.pos):
-                act = "call"
-                #act = 'match'
-            if check_button.rect.collidepoint(event.pos):
-                act = "check"
-            if fold_button.rect.collidepoint(event.pos):
-                act = "fold"
-    try:
-        return act
-    except:
-        pass
 
 if __name__ == "__main__":
     # Game Interface Parameters
@@ -44,7 +15,6 @@ if __name__ == "__main__":
     pygame.init()
     screen = pygame.display.set_mode((screen_width, screen_height))
 
-    #display_blank(screen)
     clock = pygame.time.Clock()
     pygame.mouse.set_visible(True)
 
@@ -57,8 +27,6 @@ if __name__ == "__main__":
     game = Game(False, True, screen)
     episode = []
     run_status = 'go'
-    #display_balnk
-    #if input, then
     running = True
     while running:
         clock.tick(30)

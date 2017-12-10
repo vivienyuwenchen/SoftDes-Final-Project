@@ -1,8 +1,6 @@
 """
 Create objects to handle modeling the game.
 """
-# import bot
-# import hand strength calculator
 import random
 import pygame
 
