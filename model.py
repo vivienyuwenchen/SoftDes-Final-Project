@@ -43,7 +43,7 @@ def process_user_input(game, player, other, buttons):
     """
     money = 100
 
-    move =  control.get_user_input(buttons)
+    move = get_user_input(buttons)
     if move:
         print(move)
         print(player.wager)
