@@ -147,6 +147,7 @@ class Hand(CardSet):
     def isstraightflush(self, cardvalues):
         suits = []
         for card in cardvalues:
+            print(card)
             suits.append((str(card[-1:]), int(card[:-1])))
 
         sorted_suits = sorted(suits)
@@ -249,11 +250,14 @@ class Hand(CardSet):
         #run dictionary
         new_list = []
         for c in cardvalues:
-            c = c.__repr__()
-            new_card = str(value_map[c[2:3]]) + str(c[-3:-2])
-            new_list.append(new_card)
+            c_value = c.value
+            c_suit = c.suit
+            new_card = value_map[c_value]
+            new_list.append([new_card,c_suit])
+
 
         #check for straight flush
+        print(new_list)
         check = self.isstraightflush(new_list)
         if check[0]:
             return("strt flsh", check[1])

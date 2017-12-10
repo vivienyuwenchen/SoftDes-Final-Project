@@ -39,6 +39,7 @@ def process_user_input(game, player, other, buttons):
                 print("You can't match when you're ahead on betting!")
                 process_user_input(game, player, other, buttons)
             player.call(other.wager)
+            player.check()
 
         return player.wager
     else:
@@ -76,6 +77,7 @@ def process_bot_input(game, player, other, episode):
                 print("You don't have enough money. Sorry.")
                 process_input(game, player, other)
             player.call(other.wager)
+            player.check()
         return player.wager
     else:
         pass
