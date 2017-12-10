@@ -3,7 +3,31 @@ from montecarlo import *
 import view
 import pygame,sys,inspect,random
 from pygame.locals import *
-import control
+
+def get_user_input(buttons):
+    raise_button = buttons[0]
+    check_button = buttons[1]
+    call_button = buttons[2]
+    fold_button = buttons[3]
+
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            pygame.quit()
+            sys.exit()
+        if event.type == MOUSEBUTTONDOWN:
+            if raise_button.rect.collidepoint(event.pos):
+                act = "raise"
+            elif call_button.rect.collidepoint(event.pos):
+                act = "call"
+                #act = 'match'
+            if check_button.rect.collidepoint(event.pos):
+                act = "check"
+            if fold_button.rect.collidepoint(event.pos):
+                act = "fold"
+    try:
+        return act
+    except:
+        pass
 
 def get_bot_input(episode,game,player):
     """gets move from bot and updates trainer"""
