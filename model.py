@@ -117,6 +117,7 @@ def newround(game):
     deal(game.deck, game.player2.pocket.cards, 2)
     game.player1.folded = False
     game.player2.folded = False
+    game.new_deck()
 
 def preflop(game, episode, buttons):
     check_status = betting(game, episode, buttons)
