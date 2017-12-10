@@ -99,6 +99,10 @@ class Hand(CardSet):
         for card in self.cards:
             print(card.__repr__())
 
+"""
+Evaluate Hand
+"""
+
     def isflush(self, cardvalues):
         suits = []
         for card in cardvalues:
