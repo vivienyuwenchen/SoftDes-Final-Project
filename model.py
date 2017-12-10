@@ -153,7 +153,7 @@ def river(game, episode, buttons, run_status):
     check_status = betting(game, episode, buttons)
     return check_status
 
-def showdown(game):
+def showdown(game, episode):
     """Finds Winner Gives Money"""
     # return winner
     print("Player 1:", game.player1.pocket.cards)
@@ -260,7 +260,7 @@ def update_game(game, episode, buttons,run_status):
             return 'stop'
         return 'stop'
     elif game_round == 'showdown':
-        showdown(game)
+        showdown(game, episode)
         game.round = 'newround'
         return 'go'
     pass
