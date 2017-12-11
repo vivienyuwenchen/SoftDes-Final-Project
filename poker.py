@@ -144,9 +144,9 @@ class Hand(CardSet):
 
     def isstraightflush(self, cardvalues):
         suits = []
-        for card in cardvalues:
-            print(card)
-            suits.append((str(card[-1:]), int(card[:-1])))
+        values = []
+        sorted_cards = sorted(cardvalues,key = lambda x: x[0])
+        print (sorted_cards)
 
         sorted_suits = sorted(suits)
         card1, card2, card3 = sorted_suits[0:5], sorted_suits[1:6], sorted_suits[2:7]
