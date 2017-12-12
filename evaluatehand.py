@@ -1,6 +1,7 @@
-
-#take a list of tuples (value, suit)
-#scorehand() returns an int that can be used to directly compare hands
+"""
+take a list of tuples (value, suit)
+scorehand() returns an int that can be used to directly compare hands
+"""
 
 def straightscore(hand):
     values = []
@@ -45,7 +46,7 @@ def pairscore(hand):
     cards = []
     for n in hand:
         cards.append(n[0])
-    values = set(cards)
+    values = list(set(cards))
     pair = []
     for n in values:
         pair.append((cards.count(n),n))
