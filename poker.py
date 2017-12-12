@@ -142,28 +142,42 @@ class Hand(CardSet):
             return (False, 0)
 
 
-    def isstraightflush(self, cardvalues):
+    def makecardsets(self,cardvalues):
         suits = []
         values = []
         sorted_cards = sorted(cardvalues,key = lambda x: x[0])
-        print (sorted_cards)
+        sorted_suits = sorted(cardvalues,key = lambda x: x[1])
+        
+        #print("sorted_suits" + str(sorted_suits))
 
-        sorted_suits = sorted(suits)
-        card1, card2, card3 = sorted_suits[0:5], sorted_suits[1:6], sorted_suits[2:7]
+        #sorted_suits = sorted(suits)
+        #print("sorted_suits" + str(sorted_suits))
+        card1, card2, card3 = sorted_cards[0:5], sorted_cards[1:6], sorted_suits[2:7]
         card_set = [card1, card2, card3]
+        return(card_set)
 
+    def isstraightflush(self, cardvalues):
+        card_set = self.makecardsets(cardvalues)
+        print(card_set)
+        found = False;
         results = []
         for cards in card_set:
-            for i in range(len(cards)-1):
 
-                if cards[i][1] != cards[i+1][1]:
-                    results
+            if (found == False):
+                found = True
+                for i in range(len(cards)-1):
 
-                if cards[i][0] != cards[i+1][0]-1:
-                        return False
+                    if cards[i][1] != cards[i+1][1]:
+                        found = False
+
+                    if cards[i][0] != cards[i+1][0]-1:
+                        found = False
+            results.append(found)
+            print(results)
 
 
-                    results.append((cards[-1][1], cards[0][1]))
+
+            results.append((cards[-1][1], cards[0][1]))
 
         correct_results = []
         for result in results:
@@ -261,6 +275,8 @@ class Hand(CardSet):
             new_card = value_map[c_value]
             new_list.append([new_card,c_suit])
 
+        new_list = [[2, 'D'], [3, 'D'], [10, 'S'], [11, 'S'], [12, 'S'], [13, 'S'], [14, 'S']]
+       
 
         #check for straight flush
         print(new_list)
