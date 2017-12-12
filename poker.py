@@ -120,7 +120,8 @@ class Deck(CardSet):
 
     def deal(self):
         """Returns the top card from the deck"""
-        return self.cards.pop()
+        res = self.cards.pop()
+        return res
 class Player():
     def __init__(self,funds, name, is_bot, isturn):
         self.pocket = CardSet()
@@ -274,4 +275,3 @@ def deal(deck, cardset, quantity):
     """
     for i in range(quantity):
         cardset.append(deck.deal())
-        
