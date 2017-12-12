@@ -38,6 +38,14 @@ def update_display(screen,game,buttons):
         n.x, n.y = new_pairs[i]
         n.draw()
 
+    font = pygame.font.SysFont("comicsansms", 20)
+    money1_ = font.render("Your Money: " + str(money1), True, (255, 255, 255))
+    screen.blit(money1_, (540, 220))
+    money2_ = font.render("Opponent Money: " + str(money2), True, (255, 255, 255))
+    screen.blit(money2_, (40, 220))
+    table_pot_ = font.render("Table Pot: " + str(table_pot), True, (255, 255, 255))
+    screen.blit(table_pot_, (300, 300))
+
     #display monies
     #money1 = game.player1.funds
     #money2 = game.player2.funds

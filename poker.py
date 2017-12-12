@@ -32,10 +32,10 @@ class Card(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.screen = screen
         self.image =  pygame.image.load(picture).convert_alpha()
+        self.image = pygame.transform.scale(self.image, (85, 130))
         self.image.set_colorkey(white)
-        self.image.convert_alpha() 
+        self.image.convert_alpha()
         self.rect = self.image.get_rect()
-        self.image = pygame.transform.scale(self.image, (110, 160)) 
 
         self.x = 600
         self.y = 450
@@ -57,9 +57,9 @@ class CardBack(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.screen = screen
         self.image =  pygame.image.load(picture).convert_alpha()
+        self.image = pygame.transform.scale(self.image, (85, 130))
         self.image.set_colorkey(white)
         self.image.convert_alpha()
-        self.image = pygame.transform.scale(self.image, (110, 160)) 
         self.rect = self.image.get_rect()
 
         self.x = 600
