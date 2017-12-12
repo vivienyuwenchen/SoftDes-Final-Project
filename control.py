@@ -35,3 +35,8 @@ if __name__ == "__main__":
 
         run_status = update_game(game, episode, buttons,run_status)
         pygame.display.update()
+        player1_money = game.player1.funds
+        player2_money = game.player2.funds
+        if (player1_money == 0 or player2_money ==0 ):
+            running = False
+    print("GameOver")
