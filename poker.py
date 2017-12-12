@@ -256,27 +256,27 @@ class Hand(CardSet):
     #     return sorted_values[0]
 
 
-    def player_hands(self):
-        """Counts the number of each card in the hand
-        puts results in a dict. """
-        cardvalues = self.cards
+    # def player_hands(self):
+    #     """Counts the number of each card in the hand
+    #     puts results in a dict. """
+    #     cardvalues = self.cards
 
-        #some mapping function here
-        string_values = ["2","3","4","5","6","7","8","9","T","J","Q", "K", "A"]
-        values = [2,3,4,5,6,7,8,9,10,11,12,13,14]
-        value_map = dict(zip(string_values,values))
+    #     #some mapping function here
+    #     string_values = ["2","3","4","5","6","7","8","9","T","J","Q", "K", "A"]
+    #     values = [2,3,4,5,6,7,8,9,10,11,12,13,14]
+    #     value_map = dict(zip(string_values,values))
 
-    #     hand_keys = ["strt flsh", "four", "f_hs", "flsh", "strt", "three", "two pair", "pair", "high"]
+    # #     hand_keys = ["strt flsh", "four", "f_hs", "flsh", "strt", "three", "two pair", "pair", "high"]
 
-        #run dictionary
-        new_list = []
-        for c in cardvalues:
-            c_value = c.value
-            c_suit = c.suit
-            new_card = value_map[c_value]
-            new_list.append([new_card,c_suit])
+    #     #run dictionary
+    #     new_list = []
+    #     for c in cardvalues:
+    #         c_value = c.value
+    #         c_suit = c.suit
+    #         new_card = value_map[c_value]
+    #         new_list.append([new_card,c_suit])
 
-        return evaluatehand.scorehand(new_list)
+    #     return evaluatehand.scorehand(new_list)
 
     #     new_list = [[2, 'D'], [3, 'D'], [10, 'S'], [11, 'S'], [12, 'S'], [13, 'S'], [14, 'S']]
        
@@ -432,6 +432,27 @@ class Game():
     def update_tablepot(self):
         self.table_pot = self.player1.wager + self.player2.wager
 
+def cardstolist(cardvalues):
+    """Counts the number of each card in the hand
+    puts results in a dict. """
+
+    #some mapping function here
+    string_values = ["2","3","4","5","6","7","8","9","T","J","Q", "K", "A"]
+    values = [2,3,4,5,6,7,8,9,10,11,12,13,14]
+    value_map = dict(zip(string_values,values))
+
+#     hand_keys = ["strt flsh", "four", "f_hs", "flsh", "strt", "three", "two pair", "pair", "high"]
+
+    #run dictionary
+    new_list = []
+    for c in cardvalues:
+        c_value = c.value
+        c_suit = c.suit
+        new_card = value_map[c_value]
+        new_list.append([new_card,c_suit])
+
+    return new_list
+
 def compare_hands(pocket1, pocket2, community_cards):
     """
     Takes two pockets plus community cards and returns WIN, LOSS, or DRAW with respect to the first hand
@@ -442,8 +463,11 @@ def compare_hands(pocket1, pocket2, community_cards):
 
     # hand2 = Hand(pocket2 + community_cards)
     # score2 = hand2.score_hand(hand2.player_hands())
-    score1 = player1.hand.player_hands()
-    score2 = player2.hand.player_hands()
+    p1hand = cardstolist(pocket1)+cardstolist(community_cards)
+    p2hand = cardstolist(pocket2)+cardstolist(community_cards)
+
+    score1 = scorehand(p1hand)
+    score2 = scorehand(p2hand)
     if score1 > score2:
         return "Player1"
     if score1 < score2:
