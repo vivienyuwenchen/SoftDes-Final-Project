@@ -26,7 +26,6 @@ class Button(pygame.sprite.Sprite):
 
     def draw(self):
         self.screen.blit(self.image, (self.x, self.y))
-
 class Card(pygame.sprite.Sprite):
     """ Rudimentary card class to track suit and value """
     def __init__(self, value, suit, picture, screen):
@@ -71,7 +70,6 @@ class CardBack(pygame.sprite.Sprite):
 
     def draw(self):
         self.screen.blit(self.image, (self.x, self.y))
-
 class CardSet():
     def __init__(self, cards = []):
         self.cards = cards
@@ -107,7 +105,6 @@ class Hand(CardSet):
         card1, card2, card3 = sorted_cards[0:5], sorted_cards[1:6], sorted_suits[2:7]
         card_set = [card1, card2, card3]
         return(card_set)
-
 class Deck(CardSet):
     def __init__(self, screen):
         Suits = ["C", "D", "S", "H"]
@@ -153,7 +150,6 @@ class Player():
         self.funds -= bet
         self.wager = wager2
         self.isturn = False
-
 class Game():
     def __init__(self, is_bot1, is_bot2, screen):
         self.round = 'newround'
@@ -222,7 +218,6 @@ def compare_hands(pocket1, pocket2, community_cards):
     else:
         return "Draw"
 
-
 def hand_strength(pocket1, pocket2):
     """
     Takes a pocket and the community cards and returns the probability of winning the hand [0:1]
@@ -279,3 +274,4 @@ def deal(deck, cardset, quantity):
     """
     for i in range(quantity):
         cardset.append(deck.deal())
+        

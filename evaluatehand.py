@@ -79,7 +79,3 @@ def scorehand(hand):
     scores = [straightscore(hand),flushscore(hand),pairscore(hand)]
     scores.sort(reverse = True)
     return(int(scores[0]))
-
-# myCards = [(4,'D'),(3,'D'),(5,'D'),(8,'D'),(5,'C'),(6,'H'),(10,'C')]
-
-# print(scorehand(myCards))

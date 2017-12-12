@@ -19,7 +19,6 @@ def get_user_input(buttons):
                 act = "raise"
             elif call_button.rect.collidepoint(event.pos):
                 act = "call"
-                #act = 'match'
             if check_button.rect.collidepoint(event.pos):
                 act = "check"
             if fold_button.rect.collidepoint(event.pos):
@@ -217,18 +216,12 @@ def showdown(game, episode):
 
 def update_game(game, episode, buttons,run_status):
     """
-    We know that input is going to be user input
-    We need this program to go to the correct stage of the game, depending
-    on what was happening before
-    We want to do the appropriate action to the game, increase table pot,
+    Do the appropriate action to the game, increase table pot,
     check if they folded, etc
     As always, folded skips straight to the showdown round
     Else, generate a bot input, and change the game accordingly
     Folded skips to showdown
-    game needs new attribute 'round'
     """
-    #check if run status exists, otherwise instantiate it
-    #fix this jesus this is so broken
 
     game_round = game.round
     if game_round == 'newround':
