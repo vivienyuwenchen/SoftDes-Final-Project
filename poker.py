@@ -154,8 +154,16 @@ class Hand(CardSet):
 
         results = []
         for cards in card_set:
-            if cards[0][0] == cards[-1][0]:
-                results.append((cards[-1][1], cards[0][1]))
+            for i in range(len(cards)-1):
+
+                if cards[i][1] != cards[i+1][1]:
+                    results
+
+                if cards[i][0] != cards[i+1][0]-1:
+                        return False
+
+
+                    results.append((cards[-1][1], cards[0][1]))
 
         correct_results = []
         for result in results:
