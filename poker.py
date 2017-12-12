@@ -3,6 +3,7 @@ Create objects to handle modeling the game.
 """
 import random
 import pygame
+from evaluatehand import *
 
 white = (255, 255, 255)
 green = (0, 255, 0)
@@ -142,19 +143,19 @@ class Hand(CardSet):
     #         return (False, 0)
 
 
-    # def makecardsets(self,cardvalues):
-    #     suits = []
-    #     values = []
-    #     sorted_cards = sorted(cardvalues,key = lambda x: x[0])
-    #     sorted_suits = sorted(cardvalues,key = lambda x: x[1])
+    def makecardsets(self,cardvalues):
+        suits = []
+        values = []
+        sorted_cards = sorted(cardvalues,key = lambda x: x[0])
+        sorted_suits = sorted(cardvalues,key = lambda x: x[1])
         
-    #     #print("sorted_suits" + str(sorted_suits))
+        #print("sorted_suits" + str(sorted_suits))
 
-    #     #sorted_suits = sorted(suits)
-    #     #print("sorted_suits" + str(sorted_suits))
-    #     card1, card2, card3 = sorted_cards[0:5], sorted_cards[1:6], sorted_suits[2:7]
-    #     card_set = [card1, card2, card3]
-    #     return(card_set)
+        #sorted_suits = sorted(suits)
+        #print("sorted_suits" + str(sorted_suits))
+        card1, card2, card3 = sorted_cards[0:5], sorted_cards[1:6], sorted_suits[2:7]
+        card_set = [card1, card2, card3]
+        return(card_set)
 
     # def isstraightflush(self, cardvalues):
     #     card_set = self.makecardsets(cardvalues)
@@ -255,25 +256,27 @@ class Hand(CardSet):
     #     return sorted_values[0]
 
 
-    # def player_hands(self):
-    #     """Counts the number of each card in the hand
-    #     puts results in a dict. """
-    #     cardvalues = self.cards
+    def player_hands(self):
+        """Counts the number of each card in the hand
+        puts results in a dict. """
+        cardvalues = self.cards
 
-    #     #some mapping function here
-    #     string_values = ["2","3","4","5","6","7","8","9","T","J","Q", "K", "A"]
-    #     values = [2,3,4,5,6,7,8,9,10,11,12,13,14]
-    #     value_map = dict(zip(string_values,values))
+        #some mapping function here
+        string_values = ["2","3","4","5","6","7","8","9","T","J","Q", "K", "A"]
+        values = [2,3,4,5,6,7,8,9,10,11,12,13,14]
+        value_map = dict(zip(string_values,values))
 
     #     hand_keys = ["strt flsh", "four", "f_hs", "flsh", "strt", "three", "two pair", "pair", "high"]
 
-    #     #run dictionary
-    #     new_list = []
-    #     for c in cardvalues:
-    #         c_value = c.value
-    #         c_suit = c.suit
-    #         new_card = value_map[c_value]
-    #         new_list.append([new_card,c_suit])
+        #run dictionary
+        new_list = []
+        for c in cardvalues:
+            c_value = c.value
+            c_suit = c.suit
+            new_card = value_map[c_value]
+            new_list.append([new_card,c_suit])
+
+        return evaluatehand.scorehand(new_list)
 
     #     new_list = [[2, 'D'], [3, 'D'], [10, 'S'], [11, 'S'], [12, 'S'], [13, 'S'], [14, 'S']]
        
@@ -433,12 +436,14 @@ def compare_hands(pocket1, pocket2, community_cards):
     """
     Takes two pockets plus community cards and returns WIN, LOSS, or DRAW with respect to the first hand
     """
-    cards1 = pocket1
-    hand1 = Hand(pocket1 + community_cards)
-    score1 = hand1.score_hand(hand1.player_hands())
+    # cards1 = pocket1
+    # hand1 = Hand(pocket1 + community_cards)
+    # score1 = hand1.score_hand(hand1.player_hands())
 
-    hand2 = Hand(pocket2 + community_cards)
-    score2 = hand2.score_hand(hand2.player_hands())
+    # hand2 = Hand(pocket2 + community_cards)
+    # score2 = hand2.score_hand(hand2.player_hands())
+    score1 = player1.hand.player_hands()
+    score2 = player2.hand.player_hands()
     if score1 > score2:
         return "Player1"
     if score1 < score2:
