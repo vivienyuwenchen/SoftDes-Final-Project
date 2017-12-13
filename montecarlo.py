@@ -1,3 +1,7 @@
+"""
+Trains bot using reinforcement learning. Called during training as well as during regular games.
+"""
+
 import matplotlib
 import numpy as np
 import sys

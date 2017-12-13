@@ -59,7 +59,7 @@ def pairscore(hand):
             #full house
             return (6e10+pair[0][1]*1e8+pair[1][1]*1e6)
         #three of a kind
-        else : 
+        else :
             score = 3e10+pair[0][1]*10e8
             for i in range(1,len(values)):
                 score += values[i]*10**(6-2*i)
@@ -69,7 +69,7 @@ def pairscore(hand):
             #two pair
             return (2e10+pair[0][1]*10e8+pair[1][1]*10e6+pair[2][1])
         #one pair
-        else : 
+        else :
             score = 1e10
             for i in range(0,len(values)):
                 score += pair[i][1]*(10**(8-2*i))

@@ -1,3 +1,7 @@
+"""
+Testing code
+"""
+
 import pygame, sys, inspect, random
 from pygame.locals import *
 

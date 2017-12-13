@@ -1,5 +1,5 @@
 """
-Run game and accept inputs. Could split document here.
+Run to train bot and/or play from command line.
 """
 from poker import *
 from montecarlo import *
