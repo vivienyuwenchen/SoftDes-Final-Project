@@ -31,4 +31,4 @@ To install the PokerBot, simply clone the GitHub repository and run *python cont
 
 ## Website/Poster
 
-For more information about the development of PokerBot, please visit our website: https://hackathon64.wixsite.com/pokerbot or take a look at our [Poster](Documents/PosterBot.indd)
+For more information about the development of PokerBot, please visit our website: https://hackathon64.wixsite.com/pokerbot or take a look at our [poster](Documents/PosterBot.indd).
