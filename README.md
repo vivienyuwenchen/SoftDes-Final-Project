@@ -29,6 +29,6 @@ The PokerBot's machine learning data is loaded from, updated to, and saved in sa
 
 To install the PokerBot, simply clone the GitHub repository and run *python control.py* in the command line. The game will immediately begin.
 
-## Website
+## Website/Poster
 
-For more information about the development of PokerBot, please visit our website: https://hackathon64.wixsite.com/pokerbot
+For more information about the development of PokerBot, please visit our website: https://hackathon64.wixsite.com/pokerbot or take a look at our [Poster](Documents/PosterBot.indd)
