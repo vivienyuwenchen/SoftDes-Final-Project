@@ -1,0 +1,6 @@
+pygame
+gym
+pprint
+matplotlib
+numpy
+flask

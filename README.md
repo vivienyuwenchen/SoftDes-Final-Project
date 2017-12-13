@@ -1,49 +1,34 @@
-
-Written By:
-Vivien Chen
-Harris Davidson
-Ava Lakmazaheri
-Emma Westerhoff
-Harrison Young
-
-Instalation:
-
-
-After all limaries have been installed run the program control.py to play poker.
-Enjoy!!!
-
 # PokerBot
 
-PokerBot is an interactive poker web app allowing human versus AI play. Leveraging the NumPy and Flask libraries, PokerBot features an easy to use GUI and a reinforcement-learning opponent that improves as it plays.
+PokerBot is an interactive poker app allowing human versus AI play. Leveraging the Pygame and NumPy libraries, PokerBot features an easy to use GUI and a reinforcement-learning opponent that improves as it plays.
 
+### Authors
 
-## Getting Started
+[Vivien Chen](https://github.com/vivienyuwenchen), [Harris Davidson](https://github.com/hrrs), [Ava Lakmazaheri](https://github.com/alakmazaheri), [Emma Westerhoff](https://github.com/ewesterhoff), [Harrison Young](https://github.com/hthomas60)
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+We would like to thank Denny Britz for his [reinforcement learning code](https://github.com/dennybritz/reinforcement-learning/tree/master/MC), which we used as reference.
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+All the libraries we used in the main code, as well as in our test code and old versions, are included in our requirements.txt file. You can install them by running:
 
-Inorder to run this program you will need to download the following libarabries:matplotlib, numpy, sys, flask and pickle. Onto your lokal machine. This can be done py typng the following messages into your comand line. 
+- pip install -r requirements.txt
 
-pip install matplotlib
+Alternatively, you can choose which libraries to install as necessary by typing the following into your command line:
 
-pip install numpy
+- pip install pygame
+- pip install gym
+- pip install pprint
+- pip install matplotlib
+- pip install numpy
+- pip install flask
 
-pip install sys
-
-pip install flask
-
-pip install pickle
+The PokerBot's machine learning data is loaded from, updated to, and saved in sa_cache.txt.
 
 ### Installing
 
-To install the PokerBot siimply clone the github repository and run the file control.py.
-The game will imidiatly start you playing against the bot. 
+To install the PokerBot, simply clone the GitHub repository and run *python control.py* in the command line. The game will immediately begin.
 
 ## Website
 
-More information about the development of PokerBot can be found on our webstite https://hackathon64.wixsite.com/pokerbot
-
-
+For more information about the development of PokerBot, please visit our website: https://hackathon64.wixsite.com/pokerbot
