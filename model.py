@@ -53,6 +53,7 @@ def process_user_input(game, player, other, buttons):
         elif move == "raise": #player bets an amount
             player.call(other.wager)
             player.bet(money)
+            
 
         elif move == "check" or move == "call" or move == "match":
             if player.funds - money < 0:
@@ -63,6 +64,7 @@ def process_user_input(game, player, other, buttons):
                 process_user_input(game, player, other, buttons)
             player.call(other.wager)
             player.check()
+            
 
         return player.wager
     else:
@@ -85,6 +87,7 @@ def process_bot_input(game, player, other, episode):
                 process_bot_input(game,player,other,episode)
             player.call(other.wager)
             player.bet(money)
+            
 
         elif move == "check":
             if player.wager != other.wager:
@@ -101,6 +104,7 @@ def process_bot_input(game, player, other, episode):
                 process_input(game, player, other)
             player.call(other.wager)
             player.check()
+            
         return player.wager
     else:
         pass
@@ -143,7 +147,13 @@ def newround(game):
     deal(game.deck, game.player2.pocket.cards, 2)
     game.player1.folded = False
     game.player2.folded = False
-    game.table_pot = 0
+    game.player1.wager  = 50
+    game.player1.funds -= 50
+    game.player2.wager  = 100
+    game.player2.funds -= 100
+    game.update_tablepot()
+
+    
     
 
 def preflop(game, episode, buttons):
@@ -214,6 +224,7 @@ def showdown(game, episode):
     print("Player2:", game.player2.funds)
     print("Game Over")
     print("New Round")
+    
 
 def update_game(game, episode, buttons,run_status):
     """
@@ -230,6 +241,8 @@ def update_game(game, episode, buttons,run_status):
         print(game_round)
         game.round = 'preflop'
         print(game.round)
+        
+
         return 'go'
     elif game_round == 'preflop':
         check = preflop(game, episode, buttons)
@@ -283,6 +296,9 @@ def update_game(game, episode, buttons,run_status):
         return 'stop'
     elif game_round == 'showdown':
         showdown(game, episode)
+        #game.player1.wager = 100
+        #game.player2.wager = 50
+       # game.update_tablepot()
         game.round = 'newround'
         return 'go'
     pass

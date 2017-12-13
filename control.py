@@ -37,6 +37,11 @@ if __name__ == "__main__":
         pygame.display.update()
         player1_money = game.player1.funds
         player2_money = game.player2.funds
-        if (player1_money == 0 or player2_money ==0 ):
+        if (player1_money == 0):
             running = False
-    print("GameOver")
+            print("GameOver Player 1 is out of money.")
+
+        if (player2_money ==0 ):
+            running = False
+            print("GameOver Player 2 is out of money.")
+           
