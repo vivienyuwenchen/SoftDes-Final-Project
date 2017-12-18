@@ -4,6 +4,7 @@ Run to train bot and/or play from command line.
 from poker import *
 from montecarlo import *
 
+
 def get_input(player, other):
     """
     Get user or bot input.
@@ -13,7 +14,7 @@ def get_input(player, other):
     if player.is_bot:
         """gets move from bot and updates trainer"""
         move = mc_control_epsilon_greedy(episode, game, player)
-        print(player.name,":", move)
+        print(player.name, ":", move)
 
     else:
         """ gets the move from the player"""
@@ -22,14 +23,14 @@ def get_input(player, other):
     if move == "fold":
         player.fold()
 
-    elif move == "raise": #player bets and amount
+    elif move == "raise":  # player bets and amount
         if player.funds - money < 0:
             print("You don't have enough money. Sorry")
             get_input(player, other)
         player.call(other.wager)
         player.bet(money)
 
-    elif move == "check" or move == "call" or move == "match":
+    elif move in ["check", "call", "match"]:
         if player.funds - money < 0:
             print("You don't have enough money. Sorry")
             get_input(player, other)
@@ -37,13 +38,13 @@ def get_input(player, other):
             print("You can't match when you're ahead on betting!")
             get_input(player, other)
         player.call(other.wager)
-        #player.check()
 
     else:
         print("Not a valid move - try again")
         get_input(player, other)
 
     return player.wager
+
 
 def betting():
     """Players bet against each other"""
@@ -74,6 +75,7 @@ def betting():
         print("you're stuck in betting")
         return betting()
 
+
 def newround():
     game.community_cards = []
     # deal
@@ -86,19 +88,20 @@ def newround():
 
     preflop()
 
+
 def preflop():
     print(game.player1.blind_type)
     print("Player 1:", game.player1.pocket)
     print("Player 2:", game.player2.pocket)
 
-    # betting
     if betting():
-    # advance to next round
+        # advance to next round
         game.round = 2
         flop()
     else:
         game.round = 5
         showdown()
+
 
 def flop():
     # deal
@@ -107,7 +110,6 @@ def flop():
     print("Player 2:", game.player2.pocket)
     print("Community Cards:", game.community_cards)
 
-    # betting
     if betting():
         # advance to next round
         game.round = 3
@@ -116,24 +118,25 @@ def flop():
         game.round = 5
         showdown()
 
+
 def turn():
-    # deal
     deal(game.deck, game.community_cards, 1)
     print("Player 1:", game.player1.pocket)
     print("Player 2:", game.player2.pocket)
     print("Community Cards:", game.community_cards)
 
-    # betting
     if betting():
         # advance to next round
+        # use constants to document what these numbers mean. Else they look
+        # fairly arbitrary
         game.round = 4
         river()
     else:
         game.round = 5
         showdown()
 
+
 def river():
-    # deal
     deal(game.deck, game.community_cards, 1)
     print("Player 1:", game.player1.pocket)
     print("Player 2:", game.player2.pocket)
@@ -143,6 +146,7 @@ def river():
     betting()
     game.round = 5
     showdown()
+
 
 def showdown():
     """Finds Winner Gives Money"""
@@ -158,7 +162,9 @@ def showdown():
         game.winner = "Player1"
         game.player1.funds += game.table_pot
     else:
-        winner = compare_hands(game.player1.pocket, game.player2.pocket, game.community_cards)
+        winner = compare_hands(game.player1.pocket,
+                               game.player2.pocket,
+                               game.community_cards)
         if winner == "Player1":
             game.winner = "Player1"
             game.player1.funds += game.table_pot
@@ -167,8 +173,8 @@ def showdown():
             game.player2.funds += game.table_pot
         else:
             game.winner = "Tie"
-            game.player1.funds += game.table_pot/2
-            game.player2.funds += game.table_pot/2
+            game.player1.funds += game.table_pot / 2
+            game.player2.funds += game.table_pot / 2
 
     mc_control_epsilon_greedy(episode, game, game.player1)
     mc_control_epsilon_greedy(episode, game, game.player2)
@@ -177,9 +183,14 @@ def showdown():
     print("Player2:", game.player2.funds)
     print("Game Over")
 
+
 if __name__ == "__main__":
-    for i in range(10):
+    for _ in range(10):
         # create new episode for training with every new game
+        # this is a global variable initialized in a funny place.
+        # better: pass required state as a parameter to functions that
+        # depend on it. This makes it easier to test and re-use, and clearer
+        # what does what.
         episode = []
         game = Game(False, True)
         newround()
