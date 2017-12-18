@@ -2,18 +2,23 @@
 Testing code
 """
 
-import pygame, sys, inspect, random
+import pygame
+import sys
+import inspect
+import random
 from pygame.locals import *
 
 actions = []
-white = (255,255,255)
+white = (255, 255, 255)
+
 
 class Button(pygame.sprite.Sprite):
     """ Rudimentary card class to track suit and value """
+
     def __init__(self, picture, screen, x, y):
         pygame.sprite.Sprite.__init__(self)
         self.screen = screen
-        self.image =  pygame.image.load(picture).convert_alpha()
+        self.image = pygame.image.load(picture).convert_alpha()
         self.image.set_colorkey(white)
         self.image.convert_alpha()
         self.rect = self.image.get_rect()
@@ -21,11 +26,12 @@ class Button(pygame.sprite.Sprite):
         self.x = x
         self.y = y
 
-        self.rect.centerx = self.x + (self.image.get_width()/2)
-        self.rect.centery = self.y + (self.image.get_height()/2)
+        self.rect.centerx = self.x + (self.image.get_width() / 2)
+        self.rect.centery = self.y + (self.image.get_height() / 2)
 
     def draw(self):
         self.screen.blit(self.image, (self.x, self.y))
+
 
 def click_input(buttons):
     raise_button = buttons[0]
@@ -34,7 +40,8 @@ def click_input(buttons):
     fold_button = buttons[3]
 
     for event in pygame.event.get():                                        # Check for events
-        if event.type == QUIT:                                              # Allow the user to end the game at any time
+        # Allow the user to end the game at any time
+        if event.type == QUIT:
             pygame.quit()
             sys.exit()
         if event.type == MOUSEBUTTONDOWN:
@@ -50,18 +57,23 @@ def click_input(buttons):
     try:
         return act
     except:
+        # yow! anti-pattern here.
         pass
+
+# This looks to be substantially duplicated from control.py
+# and model.py
+
 
 if __name__ == "__main__":
     # Game Interface Parameters
-    black = (0, 0, 0)                       #  Define background color
-    screen_width = 800                      #  Define game screen size
-    screen_height = 500                     #  Define game screen size
+    black = (0, 0, 0)  # Define background color
+    screen_width = 800  # Define game screen size
+    screen_height = 500  # Define game screen size
 
     pygame.init()
     screen = pygame.display.set_mode((screen_width, screen_height))
 
-    #display_blank(screen)
+    # display_blank(screen)
     clock = pygame.time.Clock()
     pygame.mouse.set_visible(True)
 
@@ -77,13 +89,16 @@ if __name__ == "__main__":
         screen.fill(black)
 
         mouse_state = pygame.mouse.get_pressed()
-        x,y = pygame.mouse.get_pos()
+        x, y = pygame.mouse.get_pos()
         #button = pygame.Rect(200, 100, 100, 50)
         #pygame.draw.rect(screen, (0,255,0), button)
         raise_button.draw()
         check_button.draw()
         call_button.draw()
         fold_button.draw()
+        # or:
+        #   for button in buttons:
+        #     button.draw()
 
         user_in = click_input(buttons)
         if user_in:

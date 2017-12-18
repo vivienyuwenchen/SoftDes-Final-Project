@@ -1,8 +1,12 @@
 from poker import *
 from montecarlo import *
 import view
-import pygame,sys,inspect,random
+import pygame
+import sys
+import inspect
+import random
 from pygame.locals import *
+
 
 def get_user_input(buttons):
     """gets input from user via buttons"""
@@ -16,6 +20,11 @@ def get_user_input(buttons):
             pygame.quit()
             sys.exit()
         if event.type == MOUSEBUTTONDOWN:
+            # Consider adding an action property to button.
+            # Then you needn't retrieve and test each one individually:
+            #   for button in buttons:
+            #     if button.rect.collidepoint(event.pos):
+            #       return button.action
             if raise_button.rect.collidepoint(event.pos):
                 act = "raise"
             elif call_button.rect.collidepoint(event.pos):
@@ -29,13 +38,21 @@ def get_user_input(buttons):
     except:
         pass
 
-def get_bot_input(episode,game,player):
+
+def get_bot_input(episode, game, player):
     """gets move from bot and updates trainer"""
     act = mc_control_epsilon_greedy(episode, game, player)
     return act
 
+
 def get_game_status(game):
+    # This should probably be a tuple, since each of its items has a completely
+    # different type and meaning based on its position.
+    # I'm hedging (“probably”) because I haven't looked to see whether there's
+    # code that mutates the list once it's constructed.
+    # Or it could be namedtuple, or class (e.g. GameStatus).
     return [game.player1.pocket, game.player2.pocket, game.community_cards.cards, game.player1.funds, game.player2.funds, game.table_pot]
+
 
 def process_user_input(game, player, other, buttons):
     """
@@ -51,10 +68,9 @@ def process_user_input(game, player, other, buttons):
         if move == "fold":
             player.fold()
 
-        elif move == "raise": #player bets an amount
+        elif move == "raise":  # player bets an amount
             player.call(other.wager)
             player.bet(money)
-
 
         elif move == "check" or move == "call" or move == "match":
             if player.funds - money < 0:
@@ -66,29 +82,31 @@ def process_user_input(game, player, other, buttons):
             player.call(other.wager)
             player.check()
 
-
         return player.wager
     else:
         pass
 
+
+# why is this different from process_user_input?
+# If it needs to be different, can it share code without duplication,
+# by calling a common function?
 def process_bot_input(game, player, other, episode):
     """
     Get user or bot input.
     """
     money = 100
 
-    move =  get_bot_input(episode,game,player)
+    move = get_bot_input(episode, game, player)
     if move:
         if move == "fold":
             player.fold()
 
-        elif move == "raise": #player bets an amount
+        elif move == "raise":  # player bets an amount
             if player.funds - money < 0:
                 print("You don't have enough money. Sorry")
-                process_bot_input(game,player,other,episode)
+                process_bot_input(game, player, other, episode)
             player.call(other.wager)
             player.bet(money)
-
 
         elif move == "check":
             if player.wager != other.wager:
@@ -110,19 +128,23 @@ def process_bot_input(game, player, other, episode):
     else:
         pass
 
+
 def betting(game, episode, buttons):
     """Players bet against each other"""
-    potential_wager = process_user_input(game, game.player1, game.player2, buttons)
+    potential_wager = process_user_input(
+        game, game.player1, game.player2, buttons)
 
     if potential_wager:
         game.player1.wager = potential_wager
         game.update_tablepot()
 
+        # try to DRY the player1 and player2 code
         if game.player1.folded:
             print("player1 folded")
             return False
 
-        game.player2.wager = process_bot_input(game, game.player2, game.player1, episode)
+        game.player2.wager = process_bot_input(
+            game, game.player2, game.player1, episode)
         game.update_tablepot()
 
         if game.player2.folded:
@@ -138,6 +160,7 @@ def betting(game, episode, buttons):
     else:
         return 'no input'
 
+
 def newround(game):
     game.community_cards.cards = []
     # deal
@@ -148,18 +171,17 @@ def newround(game):
     deal(game.deck, game.player2.pocket.cards, 2)
     game.player1.folded = False
     game.player2.folded = False
-    game.player1.wager  = 50
+    game.player1.wager = 50
     game.player1.funds -= 50
-    game.player2.wager  = 100
+    game.player2.wager = 100
     game.player2.funds -= 100
     game.update_tablepot()
-
-
 
 
 def preflop(game, episode, buttons):
     check_status = betting(game, episode, buttons)
     return check_status
+
 
 def flop(game, episode, buttons, run_status):
     # deal
@@ -172,6 +194,7 @@ def flop(game, episode, buttons, run_status):
     check_status = betting(game, episode, buttons)
     return check_status
 
+
 def turn(game, episode, buttons, run_status):
     if run_status == 'go':
         deal(game.deck, game.community_cards.cards, 1)
@@ -182,6 +205,9 @@ def turn(game, episode, buttons, run_status):
     check_status = betting(game, episode, buttons)
     return check_status
 
+# flop, turn, and river look identical
+
+
 def river(game, episode, buttons, run_status):
     if run_status == 'go':
         deal(game.deck, game.community_cards.cards, 1)
@@ -191,6 +217,7 @@ def river(game, episode, buttons, run_status):
 
     check_status = betting(game, episode, buttons)
     return check_status
+
 
 def showdown(game, episode):
     """Finds Winner Gives Money"""
@@ -206,7 +233,8 @@ def showdown(game, episode):
         game.winner = "Player1"
         game.player1.funds += game.table_pot
     else:
-        winner = compare_hands(game.player1.pocket.cards, game.player2.pocket.cards, game.community_cards.cards)
+        winner = compare_hands(
+            game.player1.pocket.cards, game.player2.pocket.cards, game.community_cards.cards)
         if winner == "Player1":
             game.winner = "Player1"
             game.player1.funds += game.table_pot
@@ -215,8 +243,8 @@ def showdown(game, episode):
             game.player2.funds += game.table_pot
         else:
             game.winner = "Tie"
-            game.player1.funds += game.table_pot/2
-            game.player2.funds += game.table_pot/2
+            game.player1.funds += game.table_pot / 2
+            game.player2.funds += game.table_pot / 2
 
     mc_control_epsilon_greedy(episode, game, game.player1)
     mc_control_epsilon_greedy(episode, game, game.player2)
@@ -227,7 +255,7 @@ def showdown(game, episode):
     print("New Round")
 
 
-def update_game(game, episode, buttons,run_status):
+def update_game(game, episode, buttons, run_status):
     """
     Do the appropriate action to the game, increase table pot,
     check if they folded, etc
@@ -243,8 +271,15 @@ def update_game(game, episode, buttons,run_status):
         game.round = 'preflop'
         print(game.round)
 
-
         return 'go'
+    # again, try to DRY these cases. The logic looks the same except for
+    # the name of the function that is called.
+    # I believe they could be combined into something like:
+    # round_actions = {'preflop': preflop, 'flop': flop, 'turn': turn, 'river': river}
+    # …
+    # elif game_round in round_actions:
+    #   check = round_actions[game_round](game, episode, buttons)
+    #   if …
     elif game_round == 'preflop':
         check = preflop(game, episode, buttons)
         if check == True:
